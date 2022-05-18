@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Tarea3 Huachipato
 
 Estudiantes PUCV curso: ICI2240-1  ESTRUCTURA DE DATOS
@@ -624,7 +623,3 @@ Crea un while con la condicion 'option != 12'.
 
 /--------------------------------------------------------------------------------------------------------------/
 ~~~
-=======
-# Tarea3
-Tarea3 2022 Estructura de Datos nashe
->>>>>>> 157a607037be11c6dfb719848fd1039cf9dd5e08
