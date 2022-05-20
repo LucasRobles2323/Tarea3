@@ -14,12 +14,12 @@ void insertTreeMap(TreeMap * tree, void* key, void * value);
 
 void eraseTreeMap(TreeMap * tree, void* key);
 
-void * searchTreeMap(TreeMap * tree, void* key);
+Pair * searchTreeMap(TreeMap * tree, void* key);
 
-void * upperBound(TreeMap * tree, void* key);
+Pair * upperBound(TreeMap * tree, void* key);
 
-void * firstTreeMap(TreeMap * tree);
+Pair * firstTreeMap(TreeMap * tree);
 
-void * nextTreeMap(TreeMap * tree);
+Pair * nextTreeMap(TreeMap * tree);
 
 #endif /* TREEMAP_h */

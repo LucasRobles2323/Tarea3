@@ -29,5 +29,6 @@
   ],
   "files.associations": {
     "stat.h": "c"
-  }
+  },
+  "C_Cpp_Runner.useMsvc": false
 }

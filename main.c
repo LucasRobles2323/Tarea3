@@ -15,6 +15,7 @@
 typedef struct {
 	int idLibro;
 	char *nombreLibro;
+	unsigned long ocurrenciaEnLibro;
 }LibrosConPalabra;
 
 typedef struct {
@@ -76,13 +77,28 @@ int lower_than_int(void * key1, void * key2) {
     return 0;
 }
 
+/*
+función que retorna negativo si queremos que key1 vaya antes que key2 
+en el mapa, retorna 0 si consideramos que las dos claves son iguales 
+y positivo si key1 debe ir antes.
+*/
+int compare(void * key1, void * key2) {
+    const int* Key1 = key1;
+    const int* Key2 = key2;
+    return (*Key1 - *Key2);
+}
 
 
-/*------- Crear Mapa de String -------*/
-TreeMap *crearMapaString() {
-	// Crea y retorna un mapa adecuado para usar string como claves.
-    TreeMap *mapBalanceado = createTreeMap(is_equal_string);
-	return mapBalanceado;
+//-----------------------------------------//
+
+/*------- Hash -------*/
+long long stringHash(const void * key) {
+    long long hash = 5381;
+    const char * ptr;
+    for (ptr = key; *ptr != '\0'; ptr++) {
+        hash = ((hash << 5) + hash) + tolower(*ptr); /* hash * 33 + c */
+    }    
+    return hash; 
 }
 //-----------------------------------------//
 
@@ -102,6 +118,7 @@ void pressEnter(int opcion){
 	// hasta que el usuario presione enter.
 	printf("\n\nPresione ENTER");
 	if(opcion == 1){printf(" para volver al men%c",163);}
+	printf("  ");
 	getchar();
 	printf("\n\n");
 }
@@ -135,175 +152,82 @@ char * _strdup(const char * str){
 
 //**************************  OPCIÓN 1  ***********************//
 
-/*------- Obtener palabras por espacio -------*/
-char *get_string_noSpace(char *tmp, int k) {
-	char *ret = (char *)malloc(100 * sizeof(char)); //Cadena de retorno
-	int ini_i = 0, i = 0; //indice inicial e indice relativo al campo
-	int j = 0; //Indice del campo en la cadena leida
-	int cont = 0; //Si es 0, es el primer caracter del string
-	while (tmp[i] != '\n') {
-		
-		if (tmp[i] != ' '){ 
-			//Comprueba si tmp[i] no es un espacio o una coma
-			if (k == j){
-				if(cont == 0){
-					ret[i - ini_i] = toupper(tmp[i]);
-					//Guarda el caracter en la cadena de retorno en mayuscula
-					cont = 1;
-				}
-				else{
-					ret[i - ini_i] = towlower(tmp[i]);
-					//Guarda el caracter en la cadena de retorno en minuscula
-				}
-			}
-			i++;
-			continue;
-		}
-
-		if (tmp[i] == ' '){
-			if (k == j) { //Comprueba que el indice del campo coincida con el leido actualmente
-				ret[i - ini_i] = '\0'; //Añade el caracter nulo
-				return ret;
-			}
-			j++; //Se aumenta el indice del campo leido actualmente
-			ini_i = i + 1;
-		}
-		i++;
+/*----------------- Lista con los text a abrir -----------------*/
+List *cantArchiveOpen(char *Archives, size_t *cant){
+	List *newList = createList();
+    char *Text = strtok(Archives, " ");
+	while (Text != NULL)
+	{
+        pushBack(newList, Text);
+        (*cant)++;
+		Text = strtok(NULL, " ");
 	}
-
-	if (k == j) { //Ultimo if seria para retornar en caso de que el campo a ser leido sea el ultimo
-		ret[i - ini_i] = '\0';
-		return ret;
-	}
-
-	return NULL;
+	Text = lastList(newList);
+	Text = strtok(Text, "\n");
+    return newList;
 }
 //-----------------------------------------//
 
-
 /*------- Abrir o no el archivo -------*/
-int esText(char *nombreArchivo, char *archiveToOpen){
-	int cont = 0;
-	char *Abrir;
-	while ((Abrir = get_string_noSpace(archiveToOpen,cont)) != NULL)
-	{
-		if (strcmp(Abrir, nombreArchivo) == 0)
-		{
-			return 1;
-		}
-		cont++;
-	}
-
+int esText(char *nombreArchivo, List *archiveToOpen, size_t *cant){
+    char *OpenYoN = (char*)firstList(archiveToOpen);
+	while (OpenYoN != NULL)
+    {
+        if (strcmp(OpenYoN, nombreArchivo) == 0){
+            (*cant)--;
+            return 1;
+        }
+        OpenYoN = (char*)nextList(archiveToOpen);
+    }
+    
 	return 0;
 }
 //-----------------------------------------//
 
-/*------- Crear Struct Palabra -------*/
-Palabra *get_palabra(char *cadenaCharacter, char* title, char*id){
-	Palabra *String = (Palabra*) malloc(sizeof(Palabra));
-	String->ocurrenciaPalabra = 1;
-	String->librosConPalabra = createList();
-	strcpy(String->palabra, cadenaCharacter);
-	LibrosConPalabra *StrInBook = (LibrosConPalabra*) malloc(sizeof(LibrosConPalabra));
-	StrInBook->idLibro = atoi(id);
-	strcpy(StrInBook->nombreLibro, title);
-	pushBack(String->librosConPalabra, StrInBook);
-	return String;
+/*------- Conseguir path al txt -------*/
+char *get_nameFile(char *archive, char *directory){
+	char aux[200];
+	strcpy(aux, directory);
+	strcat(aux, "/");
+	strcat(aux, archive);
+	char *new = strdup(aux);
+	return new;
 }
 //-----------------------------------------//
 
 /*------- Leer Archivo -------*/
-void ReadTxt(TreeMap* string_map, TreeMap* book_map, char*name){
+void ReadTxt(Map* string_map, TreeMap* book_map, char *name, char *nameDirectory){
 	// Abre un archivo especifico y guarda sus datos
-	size_t largo = strlen(name);
-	char g[largo];
-	strcpy(g, "./Libros/");
-	largo += strlen(g);
-	char *nameFile = (char*) calloc(largo, sizeof(char));
-	strcpy(nameFile, strcat(g,name));
-	nameFile = (char*) realloc(nameFile, sizeof(char) * largo);
+	char *nameFile = get_nameFile(name, nameDirectory);
+	
     FILE *F = fopen(nameFile, "r"); // Abre el archivo con el nombre recibido en modo lectura
     
 	if (!F){return;}// Si no existe el archivo, cierra el programa
-	printf("abierto\n");
-	char linea[1024]; // Cadena de caracter para guardar una linea del archivo
-	char *palabra;
-	int save = 0;
-	int cont = 0;
-	Palabra *aux;
-	Palabra *stringSave;
-	LibrosConPalabra *auxiliar;
-	char titulo[500];
-
-	while (fgets(linea, 1023, F) != NULL) { 
-        // Recorre el archivo leyendo linea por linea
-        // guardando los datos de cada linea en listas
-		if (save == 0) {
-			printf("%s", get_string_noSpace(linea,0));
-			if(strcmp(get_string_noSpace(linea,0), "Title:") != 0) continue;
-			for (size_t i = 6; i < strlen(linea); i++)
-			{
-				titulo[i] = linea[i];
-			}
-			printf("%s \n", titulo);
-			save = 1;
-			continue;
-		}
-		cont = 0;
-		while ((palabra = get_string_noSpace(linea,cont)) != '\0')
-		{
-			if ((aux = searchTreeMap(string_map, palabra)) == NULL)
-			{
-				stringSave = get_palabra(palabra, titulo, name);
-				insertTreeMap(string_map, stringSave->palabra, stringSave);
-			}
-			else{
-				aux->ocurrenciaPalabra++;
-				auxiliar = firstList(aux->librosConPalabra);
-				while (auxiliar != NULL)
-				{
-					if (atoi(name) == auxiliar->idLibro) break;
-					auxiliar = nextList(aux->librosConPalabra);
-				}
-				if (auxiliar == NULL)
-				{
-					auxiliar->idLibro = atoi(name);
-					auxiliar->nombreLibro = titulo;
-					pushBack(aux->librosConPalabra, auxiliar);
-				}
-			}
-
-
-			cont++;
-		}
-		
-		
-	}
-	
+	printf("File is %s\n", nameFile);
 	fclose(F);// Se cierra el archivo
 }
-//-----------------------------------------//
 
 /*----------------- OPCIÓN 1: -----------------*/
-void CargarDocumento(TreeMap *palabrasMap, TreeMap *librosMap){
+void CargarDocumento(Map *palabrasMap, TreeMap *librosMap){
     DIR *carpeta;
 	struct dirent *dirp;
-	char *ubicacion = "c:/Users/lucas/OneDrive/Escritorio/Tarea3_Huachipato/Libros";
+	char *ubicacion = "./Libros";
     printf("Escriba el nombre de los textos\n");
-	char Archives[100];
-	fgets(Archives,100,stdin);
+	char Archives[200];
+	fgets(Archives,200,stdin);
 	printf("\n");
+    size_t cant = 0;
+	List *FilesToOpen = cantArchiveOpen(Archives, &cant);
     carpeta = opendir(ubicacion);
-	while ((dirp = readdir(carpeta)) != NULL){
-		if(esText(dirp->d_name, Archives) == 0) continue;
-		ReadTxt(palabrasMap, librosMap, dirp->d_name);
+	while ((dirp = readdir(carpeta)) != NULL && cant > 0){
+        if(esText(dirp->d_name, FilesToOpen, &cant) == 0) continue;
+		ReadTxt(palabrasMap, librosMap, dirp->d_name, ubicacion);
 	}
+	closedir(carpeta);
 }
 //-------------------------------------------------------------//
 
 //**************************************************************//
-
-
 
 //**************************  OPCIÓN 2  ***********************//
 
@@ -357,57 +281,9 @@ void CargarDocumento(TreeMap *palabrasMap, TreeMap *librosMap){
 //**************************  OPCIÓN 6  ***********************//
 
 /*------- Mostrar palabras -------*/
-void MostrarPalabras(int *mostrados, char* buscando, TreeMap *mapa){
-	Palabra *aux = firstTreeMap(mapa);
-	int EsIgual = 1;
-	LibrosConPalabra *mostrar;
-	printf("\n\n%s\n\n", aux->palabra);
-	while (aux != NULL)
-	{
-		for (size_t i = 0; i < strlen(buscando) - 1; i++)
-		{
-			if (buscando[i] == ' ') {break;}
-			
-			if (buscando[i] != aux->palabra[i])
-			{EsIgual = 0; break;}
-		}
-		if (EsIgual)
-		{
-			printf("\nLa palabra %s esta en los siguientes libros\n", aux->palabra);
-			mostrar = firstList(aux->librosConPalabra);
-			while (mostrar != NULL)
-			{
-				printf("  %s\n", mostrar->nombreLibro);
-				mostrar = nextList(aux->librosConPalabra);
-			}
-			(*mostrados)++;
-		}
-		aux = nextTreeMap(mapa);
-	}
-}
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 6: -----------------*/
-void BuscarPorPalabra(TreeMap *palabras_map){
-	char Frase[1000];
-	while (1)
-	{
-		printf("Escriba la palabra a buscar (Las palabras no tienen espacios)\n");
-		scanf("%[0-9a-zA-Z ,-]", Frase);
-		getchar();
-		if (get_string_noSpace(Frase, 1) == NULL || get_string_noSpace(Frase,1) == '\0'){
-			printf("Su palabra no es viable a la busqueda");
-		}
-		else break;
-	}
-	int cont = 0;
-	MostrarPalabras(&cont, get_string_noSpace(Frase, 0), palabras_map);
-	if (cont = 0)
-	{
-		printf("No se encontro ninguna palabra");
-	}
-	
-}
 //-------------------------------------------------------------//
 
 //**************************************************************//
@@ -435,8 +311,9 @@ void BuscarPorPalabra(TreeMap *palabras_map){
 
 int main() {
 	// Crea los 4 mapas que se podrian usar a lo largo del codigo
-	TreeMap *palabrasGeneral = crearMapaString();
-	TreeMap *librosNombre = crearMapaString();
+    Map *palabrasGeneral = createMap(is_equal_string);
+    setSortFunction(palabrasGeneral,lower_than_string);
+	TreeMap *librosNombre = createTreeMap(compare);
 
 	int option = 0; //Variable que decide la opcion del menun seleccionada
 
@@ -478,7 +355,6 @@ int main() {
 			//-----------------------------------------//
 		case 6:
 			/*------- Buscar por palabra -------*/
-			BuscarPorPalabra(palabrasGeneral);
 			break;
 			//-----------------------------------------//
 		case 7:
@@ -498,10 +374,3 @@ int main() {
 
 	return 0;
 }
-
-// Funciones que no estan en el siguiente formato:
-/*------- Opcion del menu -------*/
-//-----------------------------------------//
-// Es porque la(s) funcion(s) necesarias 
-// se crearon en la(s) funcion(es) de una opcion 
-// anterior, lo mismo si falta en las funciones de la opcion

@@ -126,7 +126,7 @@ void eraseTreeMap(TreeMap * tree, void* key){
 
 
 
-void *searchTreeMap(TreeMap * tree, void* key) {
+Pair * searchTreeMap(TreeMap * tree, void* key) {
     if (tree == NULL || tree->root == NULL) return NULL;
     
     TreeNode * aux = tree->root;
@@ -143,11 +143,11 @@ void *searchTreeMap(TreeMap * tree, void* key) {
     
     if (aux == NULL) return NULL;
     
-    return (void *)aux->pair->value;
+    return (void *)aux->pair;
 }
 
 
-void * upperBound(TreeMap * tree, void* key) {
+Pair * upperBound(TreeMap * tree, void* key) {
     if (tree == NULL || tree->root == NULL) return NULL;
     
     TreeNode * aux = tree->root;
@@ -169,10 +169,10 @@ void * upperBound(TreeMap * tree, void* key) {
 
     if (ub_node == NULL) return NULL;
     
-    return (void *)ub_node->pair->value;
+    return ub_node->pair;
 }
 
-void * firstTreeMap(TreeMap * tree) {
+Pair * firstTreeMap(TreeMap * tree) {
     if (tree == NULL || tree->root == NULL) return NULL;
     
     TreeNode * aux = tree->root;
@@ -181,10 +181,10 @@ void * firstTreeMap(TreeMap * tree) {
     
     if (tree->current == NULL) return NULL;
     
-    return (void *)tree->current->pair->value;
+    return tree->current->pair;
 }
 
-void * nextTreeMap(TreeMap * tree) {
+Pair * nextTreeMap(TreeMap * tree) {
     if (tree == NULL || tree->root == NULL || tree->current == NULL) return NULL;
     
     if (tree->current->right != NULL) {
@@ -206,5 +206,5 @@ void * nextTreeMap(TreeMap * tree) {
     
     if (aux == NULL) return NULL;
     
-    return (void *)aux->pair->value;
+    return aux->pair;
 }

@@ -179,8 +179,7 @@ void * _popBack(Map * list) {
     }
 
     free(aux);
-
-
+    
     return data;
 }
 
