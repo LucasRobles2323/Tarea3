@@ -22,20 +22,22 @@ typedef struct {
 typedef struct {
 	char *palabra;
 	unsigned long ocurrenciaPalabra;
+	unsigned long LibrosWithPalabra;
 	List *librosConPalabra;
 }Palabra;
 
 typedef struct {
 	char *String;
 	unsigned long ocurrenciaString;
-	long *frecuencia;
-	long *relevancia;
+	long frecuencia;
+	long relevancia;
 }PalabraEnLibro;
 
 typedef struct {
 	int idBook;
 	char *nameBook;
 	unsigned long cantPalabrasBook;
+	unsigned long cantCaracteresBook;
 	List *palabrasEnLibro;
 }Libro;
 
@@ -199,8 +201,9 @@ char *get_nameFile(char *archive, char *directory){
 /*------- separar palabras del file -------*/
 char* nextWord (FILE *f) {
     char WORD[1024];
-    if (fscanf(f, " %1023s", WORD) == 1)
-    {return strdup(WORD);}
+    if (fscanf(f, " %1023s", WORD) == 1){
+		return strdup(WORD);
+	}
     else {return NULL;}
 }
 //-----------------------------------------//
@@ -214,6 +217,7 @@ char* get_title(FILE *f) {
 }
 //-----------------------------------------//
 
+/*------- Crear struct LibrosConPalabra -------*/
 LibrosConPalabra *createBookConWord(unsigned long idToBook, char* nameToBook, char* titleToBook){
 	LibrosConPalabra *newHere = (LibrosConPalabra*) malloc (sizeof(LibrosConPalabra));
     newHere->idLibro = idToBook;
@@ -221,6 +225,7 @@ LibrosConPalabra *createBookConWord(unsigned long idToBook, char* nameToBook, ch
     newHere->ocurrenciaEnLibro = 1;
     return newHere;
 }
+//-----------------------------------------//
 
 /*------- Crear struct Palabra -------*/
 Palabra *createWord(char *WORD, unsigned long ID, char *TITLE){
@@ -228,15 +233,42 @@ Palabra *createWord(char *WORD, unsigned long ID, char *TITLE){
     new->ocurrenciaPalabra = 1;
     new->palabra = strdup(WORD);
     new->librosConPalabra = createList();
+	new->LibrosWithPalabra = 1;
 	LibrosConPalabra *BookWithWord = createBookConWord(ID, WORD, TITLE);
 	pushBack(new->librosConPalabra, BookWithWord);
     return new;
 }
 //-----------------------------------------//
 
+/*------- Crear struct PalabraEnLibro -------*/
+PalabraEnLibro *createWordEnBook(char* nameToWord){
+	PalabraEnLibro *newHere = (PalabraEnLibro*) malloc (sizeof(PalabraEnLibro));
+    newHere->ocurrenciaString = 1;
+    newHere->String = strdup(nameToWord);
+    newHere->frecuencia = 0;
+	newHere->relevancia = 0;
+    return newHere;
+}
+//-----------------------------------------//
+
+/*------- Crear struct Palabra -------*/
+Libro *createBook(char *WORD, unsigned long ID, char *TITLE){
+    Libro *new = (Libro*) malloc (sizeof(Libro));
+    new->idBook = ID;
+    new->nameBook = strdup(TITLE);
+	new->cantPalabrasBook = 1;
+	new->cantCaracteresBook = strlen(WORD);
+    new->palabrasEnLibro = createList();
+	PalabraEnLibro *WordInBook = createWordEnBook(WORD);
+	pushBack(new->palabrasEnLibro, WordInBook);
+    return new;
+}
+//-----------------------------------------//
+
 /*------- Guardar en los mapas la informacion -------*/
 void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave, 
-                     Map *words_Map, Map *books_Map) {
+                     Map *words_Map, Map *books_Map){
+	
 	Palabra *auxWord;
 	LibrosConPalabra *auxWord2;
 	if (searchMap(words_Map, wordToSave) == NULL)
@@ -256,8 +288,34 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
             auxWord2 = (LibrosConPalabra*) nextList(auxWord->librosConPalabra);
         }
         if (auxWord2 == NULL){
+			auxWord->LibrosWithPalabra++;
             auxWord2 = createBookConWord(atoi(idToSave), wordToSave, titleToSave);
             pushBack(auxWord->librosConPalabra, auxWord2);
+        }
+	}
+
+	Libro *auxBook;
+	PalabraEnLibro *auxBook2;
+	if (searchMap(books_Map, titleToSave) == NULL)
+	{
+		auxBook = createBook(wordToSave, atoi(idToSave), titleToSave);
+        insertMap(books_Map, auxBook->nameBook, auxBook);
+	}
+	else{
+		auxBook = (Libro*)searchMap(books_Map, titleToSave);
+        auxBook2 = (PalabraEnLibro*)firstList(auxBook->palabrasEnLibro);
+        while (auxBook2 != NULL){
+            if (is_equal_string(auxBook2->String, wordToSave)){
+                auxBook->cantCaracteresBook += strlen(wordToSave);
+				auxBook2->ocurrenciaString++;
+                break;
+            }
+            auxBook2 = (PalabraEnLibro*) nextList(auxBook->palabrasEnLibro);
+        }
+        if (auxBook2 == NULL){
+			auxBook->cantCaracteresBook += strlen(wordToSave);
+            auxBook2 = createWordEnBook(wordToSave);
+            pushBack(auxBook->palabrasEnLibro, auxBook2);
         }
 	}
 }
@@ -297,7 +355,8 @@ void CargarDocumento(Map *palabrasMap, Map *librosMap){
     DIR *carpeta;
 	struct dirent *dirp;
 	char *ubicacion = "./Libros";
-    printf("Escriba el nombre de los textos\n");
+    printf("Escriba las id de los libros que desea cargar con .txt al final\n");
+	printf("(Si desea ingresar dos o mas, separe con estacios despues de cada .txt)\n");
 	char Archives[200];
 	fgets(Archives,200,stdin);
 	printf("\n");
@@ -316,10 +375,26 @@ void CargarDocumento(Map *palabrasMap, Map *librosMap){
 
 //**************************  OPCIÓN 2  ***********************//
 
-/*-------  -------*/
+/*------- Mostrar Libro -------*/
+void mostrarLibro(Libro* aux){
+	printf("Titulo: %s\n", aux->nameBook);
+	printf("    Id: %lu\n", aux->idBook);
+	printf("  Cantidad de Palabras: %lu\n", aux->cantPalabrasBook);
+	printf("Cantidad de Caracteres: %lu\n\n", aux->cantCaracteresBook);
+}
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 2: -----------------*/
+void MostrarDocumentosOrdenados(Map *allBooks){
+	printf("A continuacion se mostraran los libros ordenados con sus id \n\n");
+	Libro *imprimir = firstMap(allBooks);
+	while (imprimir != NULL)
+	{
+		mostrarLibro(imprimir);
+		imprimir = nextMap(allBooks);
+	}
+	printf("\n");
+}
 //-------------------------------------------------------------//
 
 //**************************************************************//
@@ -425,6 +500,11 @@ int main() {
             //-----------------------------------------//
         case 2:
 			/*------- Mostrar documentos ordenados -------*/
+			MostrarDocumentosOrdenados(librosGeneral);
+			break;
+			//-----------------------------------------//
+        case 3:
+            /*------- Buscar un libro por titulo -------*/
 			printf("all Words \n\n");
 			Palabra *aux = firstMap(palabrasGeneral);
 			while (aux != NULL)
@@ -434,9 +514,6 @@ int main() {
 			}
 			printf("\n\n");
 			break;
-			//-----------------------------------------//
-        case 3:
-            /*------- Buscar un libro por titulo -------*/
             break;
 			//-----------------------------------------//
 		case 4:
