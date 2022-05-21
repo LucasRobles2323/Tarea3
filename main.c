@@ -29,8 +29,8 @@ typedef struct {
 typedef struct {
 	char *String;
 	unsigned long ocurrenciaString;
-	long frecuencia;
-	long relevancia;
+	unsigned long long frecuencia;
+	unsigned long long relevancia;
 }PalabraEnLibro;
 
 typedef struct {
@@ -270,8 +270,8 @@ Libro *createBook(char *WORD, unsigned long ID, char *TITLE){
 void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave, 
                      Map *words_Map, Map *books_Map){
 	
-	Palabra *auxWord;
-	LibrosConPalabra *auxWord2;
+	Palabra *auxWord = NULL;
+	LibrosConPalabra *auxWord2 = NULL;
 	if (searchMap(words_Map, wordToSave) == NULL)
 	{
 		auxWord = createWord(wordToSave);
@@ -289,7 +289,7 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 			if (is_equal_string(titleToSave, auxWord2->nombreLibro) == 1)
 			{
 				auxWord2->ocurrenciaEnLibro++;
-				return ;
+				break;
 			}
 			auxWord2 = nextList(auxWord->ConPalabra);
 		}
@@ -300,8 +300,8 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 		}
 	}
 
-	Libro *auxBook;
-	PalabraEnLibro *auxBook2;
+	Libro *auxBook = NULL;
+	PalabraEnLibro *auxBook2 = NULL;
 	if (searchMap(books_Map, titleToSave) == NULL)
 	{
 		auxBook = createBook(wordToSave, atoi(idToSave),titleToSave);
@@ -312,19 +312,20 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 	}
 	else{
 		auxBook = searchMap(books_Map, titleToSave);
-        auxBook->cantCaracteresBook = strlen(wordToSave);
-        auxBook2 = firstList(auxBook->EnLibro);
+		auxBook->cantCaracteresBook += strlen(wordToSave);
+		auxBook2 = firstList(auxBook->EnLibro);
 		while (auxBook2)
 		{
-			if (is_equal_string(wordToSave, auxBook2->String) == 1)
+			if (is_equal_string(auxBook2->String, wordToSave))
 			{
 				auxBook2->ocurrenciaString++;
-				return ;
+				break;
 			}
 			auxBook2 = nextList(auxBook->EnLibro);
 		}
 		if (!auxBook2)
 		{
+			auxBook->cantPalabrasBook++;
 			auxBook2 = createWordEnBook(wordToSave);
 			pushBack(auxBook->EnLibro, auxBook2);
 		}
@@ -432,9 +433,12 @@ void calcularFrecuencia(Libro *onlyBook){
 	while (aux != NULL)
 	{
 		aux->frecuencia = aux->ocurrenciaString / onlyBook->cantPalabrasBook;
-		printf("%s su frecuencia es: \n", aux->String);
-		printf("%lu / %lu = ", aux->ocurrenciaString, onlyBook->cantPalabrasBook);
-		printf("%ld\n\n", aux->frecuencia);
+		if(aux->ocurrenciaString > 20){
+			printf("%s su frecuencia es: \n", aux->String);
+			printf("%lu / %lu = ", aux->ocurrenciaString, onlyBook->cantPalabrasBook);
+			printf("%lld\n\n", aux->frecuencia);
+		}
+		aux = nextList(onlyBook->EnLibro);
 	}
 }
 //-----------------------------------------//
