@@ -410,9 +410,32 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 //**************************  OPCIÓN 3  ***********************//
 
 /*-------  -------*/
+int compare_strings(char cadena1[101], char *cadena2)
+{   size_t largo = sizeof(cadena2)/sizeof(char); // SIRVE PARA ENCONTRAR EL LARGO DE LA CADENA DINAMICA
+    for(int i = 0; i < largo; i++){
+		if (cadena1[i] != cadena2[i]) {return 1;}
+		}return 0;
+}
+
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 3: -----------------*/
+void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
+{
+	book = firstMap(booksMap);
+		while(book != NULL)
+		{
+			if(compare_strings(title, book->nameBook) == 0)
+			{	
+				printf("Libro encontrado: \n");
+				mostrarLibro(book);	return;
+
+			}else{book = nextMap(booksMap);}
+		}
+
+		printf("Libro no encontrado");
+		return;
+}
 //-------------------------------------------------------------//
 
 //**************************************************************//
@@ -535,11 +558,12 @@ int main() {
 			//-----------------------------------------//
         case 3:
             /*------- Buscar un libro por titulo -------*/
-			printf("Ingrese el nombre de los ejemplares que desea buscar\n");
-			printf("Cada palabra debe estar separada por un espacio, de otro modo \n la búsqueda no se realizará correctamente");
-			Libro* book;
-			scanf("%[0-9a-zA-Z ,-]", book);
+			printf("Ingrese el nombre de los ejemplares que desea buscar \n");
+			Libro* book; 
+			char title[1000];
+			scanf("%[0-9a-zA-Z ,-]", title);
 			getchar();
+			BuscarLibroTitulo(book, librosGeneral, title);
             break;
 			//-----------------------------------------//
 		case 4:
@@ -553,8 +577,6 @@ int main() {
 			//-----------------------------------------//
 		case 6:
 			/*------- Buscar por palabra -------*/
-			Palabra* word;
-			printf("Ingrese la palabra que desea buscar en el directorio");
 			scanf("%[0-9a-zA-Z ,-]", word->palabra);
 			getchar();
 			//BuscarPalabra(word->palabra);
