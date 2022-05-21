@@ -28,16 +28,16 @@ typedef struct {
 
 typedef struct {
 	char *String;
-	unsigned long ocurrenciaString;
-	unsigned long long frecuencia;
-	unsigned long long relevancia;
+	float ocurrenciaString;
+	double frecuencia;
+	double relevancia;
 }PalabraEnLibro;
 
 typedef struct {
 	int idBook;
 	char *nameBook;
 	unsigned long cantPalabrasBook;
-	unsigned long cantCaracteresBook;
+	unsigned long long cantCaracteresBook;
 	List *EnLibro;
 }Libro;
 
@@ -415,12 +415,12 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 
 //**************************  OPCIÓN 3  ***********************//
 
-/*-------  -------*/
+/*------- Comparar Strings -------*/
 int compare_strings(char cadena1[101], char *cadena2)
 {   size_t largo = sizeof(cadena2)/sizeof(char); // SIRVE PARA ENCONTRAR EL LARGO DE LA CADENA DINAMICA
     for(int i = 0; i < largo; i++){
 		if (cadena1[i] != cadena2[i]) {return 1;}
-		}return 0;
+	}return 0;
 }
 
 //-----------------------------------------//
@@ -450,17 +450,12 @@ void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 
 //**************************  OPCIÓN 4  ***********************//
 
-/*-------  -------*/
+/*------- Calcula la frecuencia de cada una -------*/
 void calcularFrecuencia(Libro *onlyBook){
 	PalabraEnLibro *aux = firstList(onlyBook->EnLibro);
 	while (aux != NULL)
 	{
-		aux->frecuencia = aux->ocurrenciaString / onlyBook->cantPalabrasBook;
-		if(aux->ocurrenciaString > 20){
-			printf("%s su frecuencia es: \n", aux->String);
-			printf("%lu / %lu = ", aux->ocurrenciaString, onlyBook->cantPalabrasBook);
-			printf("%lld\n\n", aux->frecuencia);
-		}
+		aux->frecuencia = (double) aux->ocurrenciaString / (double)onlyBook->cantPalabrasBook;
 		aux = nextList(onlyBook->EnLibro);
 	}
 }
