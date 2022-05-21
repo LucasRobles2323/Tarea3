@@ -537,7 +537,12 @@ void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras)
 	search = (Palabra *) searchMap(mapaPalabras, stringPalabra);
 
 	printf("\nLibros con la palabra %s: \n\n", search->palabra);
-
+	libro = (LibrosConPalabra *) firstList(search->ConPalabra);
+	while(libro)
+	{
+		mostrarLibroConPalabra(libro);
+		libro = (LibrosConPalabra *) nextList(search->ConPalabra);
+	}
 }
 //-------------------------------------------------------------//
 
@@ -614,6 +619,7 @@ int main() {
 			//-----------------------------------------//
 		case 6:
 			/*------- Buscar por palabra -------*/
+			buscarPorPalabra(librosGeneral, palabrasGeneral);
 			break;
 			//-----------------------------------------//
 		case 7:
