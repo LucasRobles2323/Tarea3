@@ -505,15 +505,11 @@ int main() {
 			//-----------------------------------------//
         case 3:
             /*------- Buscar un libro por titulo -------*/
-			printf("all Words \n\n");
-			Palabra *aux = firstMap(palabrasGeneral);
-			while (aux != NULL)
-			{
-				printf("%s aparece %lu\n", aux->palabra, aux->ocurrenciaPalabra);
-				aux = nextMap(palabrasGeneral);
-			}
-			printf("\n\n");
-			break;
+			printf("Ingrese el nombre de los ejemplares que desea buscar\n");
+			printf("Cada palabra debe estar separada por un espacio, de otro modo \n la búsqueda no se realizará correctamente");
+			Libro* book;
+			scanf("%[0-9a-zA-Z ,-]", book);
+			getchar();
             break;
 			//-----------------------------------------//
 		case 4:
@@ -526,6 +522,10 @@ int main() {
 			//-----------------------------------------//
 		case 6:
 			/*------- Buscar por palabra -------*/
+			Palabra* word;
+			printf("Ingrese la palabra que desea buscar en el directorio");
+			scanf("%[0-9a-zA-Z ,-]", word->palabra);
+			getchar();
 			break;
 			//-----------------------------------------//
 		case 7:
