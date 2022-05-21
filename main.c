@@ -444,6 +444,11 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 6: -----------------*/
+/*BuscarPalabra(Palabra* palabra)
+{
+	Map *newMapa = createMap(is_equal_int);
+    setSortFunction(newMapa,lower_than_int)
+}*/
 //-------------------------------------------------------------//
 
 //**************************************************************//
@@ -526,6 +531,7 @@ int main() {
 			printf("Ingrese la palabra que desea buscar en el directorio");
 			scanf("%[0-9a-zA-Z ,-]", word->palabra);
 			getchar();
+			//BuscarPalabra(word->palabra);
 			break;
 			//-----------------------------------------//
 		case 7:
