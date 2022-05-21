@@ -385,6 +385,8 @@ void CargarDocumento(Map *palabrasMap, Map *librosMap){
 
 //**************************************************************//
 
+
+
 //**************************  OPCIÓN 2  ***********************//
 
 /*------- Mostrar Libro -------*/
@@ -503,7 +505,7 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 
 //**************************  OPCIÓN 6  ***********************//
 
-/*-------  -------*/
+/*------- Muestra un libro y una id -------*/
 void mostrarLibroConPalabra(LibrosConPalabra *libro)
 {
 	printf("Titulo: %s\n",libro->nombreLibro);
