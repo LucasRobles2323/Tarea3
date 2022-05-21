@@ -577,7 +577,6 @@ int main() {
 			//-----------------------------------------//
 		case 6:
 			/*------- Buscar por palabra -------*/
-			scanf("%[0-9a-zA-Z ,-]", word->palabra);
 			getchar();
 			//BuscarPalabra(word->palabra);
 			break;
