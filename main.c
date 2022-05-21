@@ -509,9 +509,30 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 //**************************  OPCIÓN 6  ***********************//
 
 /*-------  -------*/
+void mostrarLibroConPalabra(LibrosConPalabra *libro)
+{
+	printf("Titulo: %s\n",libro->nombreLibro);
+	printf("ID: %d\n\n", libro->idLibro);
+}
+
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 6: -----------------*/
+void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras)
+{
+	char stringPalabra[101];
+	Palabra *search;
+	LibrosConPalabra *libro;
+
+	printf("Ingrese la palabra a buscar: ");
+	scanf("%[0-9a-zA-Z ,-]", stringPalabra);
+	getchar();
+
+	search = (Palabra *) searchMap(mapaPalabras, stringPalabra);
+
+	printf("\nLibros con la palabra %s: \n\n", search->palabra);
+
+}
 //-------------------------------------------------------------//
 
 //**************************************************************//
