@@ -66,17 +66,34 @@ int lower_than_string(void * key1, void * key2) {
   retorna 1 si son iguales
 */
 int is_equal_int(void * key1, void * key2) {
-    printf("%d\n\n", key2);
     if(*(int*)key1 == *(int*)key2) return 1;
     return 0;
 }
 
 /*
-  función para comparar claves de tipo int
+  función para comparar claves de tipo long
   retorna 1 si son key1<key2
 */
 int lower_than_int(void * key1, void * key2) {
     if(*(int*)key1 < *(int*)key2) return 1;
+    return 0;
+}
+
+/*
+  función para comparar claves de tipo long
+  retorna 1 si son iguales
+*/
+long is_equal_long(void * key1, void * key2) {
+    if(*(long*)key1 == *(long*)key2) return 1;
+    return 0;
+}
+
+/*
+  función para comparar claves de tipo long
+  retorna 1 si son key1<key2
+*/
+long lower_than_long(void * key1, void * key2) {
+    if(*(long*)key1 < *(long*)key2) return 1;
     return 0;
 }
 
@@ -92,17 +109,6 @@ int compare(void * key1, void * key2) {
 }
 
 
-//-----------------------------------------//
-
-/*------- Hash -------*/
-long long stringHash(const void * key) {
-    long long hash = 5381;
-    const char * ptr;
-    for (ptr = key; *ptr != '\0'; ptr++) {
-        hash = ((hash << 5) + hash) + tolower(*ptr); /* hash * 33 + c */
-    }    
-    return hash; 
-}
 //-----------------------------------------//
 
 /*------- Advertencia -------*/
@@ -412,13 +418,32 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 //**************************************************************//
 
 
-
 //**************************  OPCIÓN 4  ***********************//
 
 /*-------  -------*/
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 4: -----------------*/
+void PalabrasConMayotFrecuencia(Map* allBooks){
+	int id;
+	printf("Ingrese el id de un libro: ");
+	fscanf(stdin, "%d", &id);
+	getchar();
+	Libro *aux = firstMap(allBooks);
+	while (aux != NULL)
+	{
+		if (aux->idBook == id)
+		{
+			break;
+		}
+		aux = nextMap(allBooks);
+	}
+	if (aux == NULL){
+		printf("El libro no existe o no ha sido cargado");
+		return;
+	}
+	printf("El libro es %s", aux->nameBook);
+}
 //-------------------------------------------------------------//
 
 //**************************************************************//
@@ -519,6 +544,7 @@ int main() {
 			//-----------------------------------------//
 		case 4:
 			/*------- Palabras con mayor frecuencia -------*/
+			PalabrasConMayotFrecuencia(librosGeneral);
 			break;
 			//-----------------------------------------//
 		case 5:
