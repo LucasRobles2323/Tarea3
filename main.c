@@ -445,6 +445,16 @@ void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 }
 //-------------------------------------------------------------//
 
+void BuscarLibro(Libro* book, Map* booksMap)
+{
+	printf("Ingrese el nombre de los ejemplares que desea buscar \n");
+		char title[1000];
+		scanf("%[0-9a-zA-Z ,-]", title);
+		getchar();
+		BuscarLibroTitulo(book, booksMap, title);
+		return;
+}
+
 //**************************************************************//
 
 
@@ -590,13 +600,8 @@ int main() {
 			//-----------------------------------------//
         case 3:
             /*------- Buscar un libro por titulo -------*/
-			printf("Ingrese el nombre de los ejemplares que desea buscar \n");
-			Libro* book; 
-			char title[1000];
-			scanf("%[0-9a-zA-Z ,-]", title);
-			getchar();
-			BuscarLibroTitulo(book, librosGeneral, title);
-            break;
+			;Libro* book;
+			BuscarLibro(book, librosGeneral);
 			//-----------------------------------------//
 		case 4:
 			/*------- Palabras con mayor frecuencia -------*/
