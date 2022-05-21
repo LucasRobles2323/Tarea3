@@ -420,9 +420,10 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 int compare_strings(char cadena1[101], char *cadena2)
 {   size_t largo = sizeof(cadena2)/sizeof(char); // SIRVE PARA ENCONTRAR EL LARGO DE LA CADENA DINAMICA
     for(int i = 0; i < largo; i++){
-		if (cadena1[i] != cadena2[i]) {return 1;}
+		if (tolower(cadena1[i]) != tolower(cadena2[i])) {return 1;}
 	}return 0;
 }
+
 
 //-----------------------------------------//
 
@@ -434,13 +435,15 @@ void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 		{
 			if(compare_strings(title, book->nameBook) == 0)
 			{	
+				printf("\n");
 				printf("Libro encontrado: \n");
+				printf("\n");
 				mostrarLibro(book);	return;
 
 			}else{book = nextMap(booksMap);}
 		}
 
-		printf("Libro no encontrado");
+		printf("Libro no encontrado\n");
 		return;
 }
 //-------------------------------------------------------------//
