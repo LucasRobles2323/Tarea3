@@ -621,6 +621,182 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 5: -----------------*/
+Relevancia *crearLibro (char *titulo, int numeroDocumento){
+	Relevancia *new = (Relevancia*) malloc (sizeof(Relevancia));
+	new->titulo = strdup (titulo);
+	new->numeroDocumentos = numeroDocumento;
+	new->PalabraRelevante = createMap(is_equal_int);
+	setSortFunction(new->PalabraRelevante, lower_than_int);
+	return new;
+}
+
+PalabraRelevante *crearpalabra (float relevancia){
+	PalabraRelevante *new = (PalabraRelevante*) malloc (sizeof(PalabraRelevante));
+	new->relevancia = relevancia;
+	new->palabra = createList();
+	return new;
+}
+
+float calcularRel (unsigned long libroConPalabra, unsigned long cantPalabrasLibro, int contador, float ocurrenciasString){
+	float logaritmo, division;
+    
+	logaritmo = log10 (contador/libroConPalabra);
+	division = ocurrenciasString/cantPalabrasLibro;
+
+	return (division * logaritmo);
+}
+
+void borrarMapa (Map *mapaErase){
+	Relevancia *borrarRelevancia = firstMap (mapaErase);
+	while (borrarRelevancia != NULL){
+		eraseMap (mapaErase, borrarRelevancia->titulo);
+		borrarRelevancia = nextMap (mapaErase);
+		if (borrarRelevancia == NULL)break;
+	}
+
+}
+
+void relevanciaCreate (Map *relevancia_map, Map *libros_map, Map *palabras_map){
+	if ((firstMap (libros_map)) == NULL || libros_map == NULL){
+		printf ("No se ha cargado ningun archivo\n");
+		return;
+	}
+    
+	PalabraRelevante *pal;
+	Relevancia *rel; 
+	float relevante;
+    int cont = 0;
+	Libro *book = firstMap (libros_map);
+	while (book != NULL){
+		cont ++;
+		book = nextMap (libros_map);
+	}
+
+	if (cont == 1){
+		printf ("Si se cargo 1 solo documento todas las palabras tienen relevancia 0\n");
+		return;
+	}
+
+	if (relevancia_map == NULL || (firstMap (relevancia_map)) == NULL){
+		Libro *book = firstMap (libros_map);
+		PalabraEnLibro *wordInBook = firstList (book->EnLibro);
+		Palabra *string = searchMap (palabras_map, wordInBook->String);
+
+		while (book != NULL){
+			rel = crearLibro (book->nameBook, cont);
+			insertMap (relevancia_map, rel->titulo, rel);
+			while (wordInBook != NULL){
+				relevante = calcularRel (string->LibrosWithPalabra, book->cantPalabrasBook, cont, wordInBook->ocurrenciaString);
+
+				PalabraRelevante *verificar = searchMap (rel->PalabraRelevante, &relevante);
+				
+				if (verificar == NULL){
+					
+					pal = crearpalabra (relevante);
+					pal->palabra = createList ();
+					pushBack (pal->palabra, wordInBook->String);
+					insertMap (rel->PalabraRelevante, &pal->relevancia, pal);
+					
+				}
+				else{
+					pushBack (verificar->palabra, wordInBook->String);
+				}
+
+				wordInBook = nextList (book->EnLibro);
+				if (wordInBook == NULL)continue;
+				string = searchMap (palabras_map, wordInBook->String);	
+			}
+			book = nextMap (libros_map);
+			if (book == NULL) break;
+			wordInBook = firstList (book->EnLibro);
+			string = searchMap (palabras_map, wordInBook->String);
+		}
+	}else{
+		Relevancia *comparador = firstMap (relevancia_map);
+	    if (cont > comparador->numeroDocumentos){
+
+            borrarMapa (relevancia_map);
+        
+		    Libro *book = firstMap (libros_map);
+		    PalabraEnLibro *wordInBook = firstList (book->EnLibro);
+		    Palabra *string = searchMap (palabras_map, wordInBook->String);
+
+		    while (book != NULL){
+			    rel = crearLibro (book->nameBook, cont);
+			    insertMap (relevancia_map, rel->titulo, rel);
+			    while (wordInBook != NULL){
+				    relevante = calcularRel (string->LibrosWithPalabra, book->cantPalabrasBook, cont, wordInBook->ocurrenciaString);
+				    PalabraRelevante *verificar = searchMap (rel->PalabraRelevante, &relevante);
+				    
+				    if (verificar == NULL){
+					
+					    pal = crearpalabra (relevante);
+					    pal->palabra = createList ();
+					    pushBack (pal->palabra, wordInBook->String);
+					    insertMap (rel->PalabraRelevante, &pal->relevancia, pal);
+					
+				    }
+				    else{
+					    pushBack (verificar->palabra, wordInBook->String);
+				    }
+                    
+				    wordInBook = nextList (book->EnLibro);
+				    if (wordInBook == NULL)continue;
+				    string = searchMap (palabras_map, wordInBook->String);	
+			    }
+			    book = nextMap (libros_map);
+			    if (book == NULL) break;
+			    wordInBook = firstList (book->EnLibro);
+			    string = searchMap (palabras_map, wordInBook->String);
+	        }
+	    }
+    }
+}	
+
+void mostrarRelevancia (Map * mapa){
+	Relevancia *estructura = firstMap (mapa);
+	if (estructura == NULL){
+		printf ("Algo paso\n");
+		return;
+	}
+    
+	printf ("Titulos a mostar:\n");
+	while (estructura != NULL){
+		printf ("%s\n", estructura->titulo);
+		estructura = nextMap (mapa);
+	}
+    printf ("\n");
+
+    char titulo[101];
+	printf ("Escriba el libro \n");
+	scanf("%[0-9a-zA-Z ,-]", titulo);
+	getchar();
+
+	estructura = searchMap (mapa, titulo);
+	if (estructura == NULL){
+		printf ("No esta el libro buscado o no lo escribio bien\n");
+		return;
+	}
+
+    int cont = 0;
+	PalabraRelevante *word = firstMap (estructura->PalabraRelevante);
+	char *lista = firstList (word->palabra);
+	printf ("Libro : %s\n", estructura->titulo);
+	printf ("------------------------------------------\n");
+	while (word != NULL){
+		printf ("Relevancia : %f\n", word->relevancia);
+		lista = firstList (word->palabra);
+		while (lista != NULL){
+			printf ("palabra : %s \n ",lista);
+			lista = nextList (word->palabra);
+			cont++;
+		    if (cont >= 10) break;
+		}
+		printf ("-----------------------------------------|\n");
+		 if (cont >= 10) break;
+		word = nextMap (estructura->PalabraRelevante);
+	}
+}
 //-------------------------------------------------------------//
 
 
