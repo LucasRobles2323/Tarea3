@@ -495,18 +495,17 @@ int compare_strings_advanced(char* cadena1, char *cadena2) // cadena 2 avanza, l
 	
 	minsuculas(cadena1); minsuculas(cadena2); // Las transforma en cadenas de puras minusculas
 	
-	for(int i = 0; i < largo; i++) // for que hace el algrotimo necesario para ver si contienen las palabras{
+	for(int i = 0; i < largo; i++){ // for que hace el algrotimo necesario para ver si contienen las palabras{
 		if(cadena2[i] != ' ') {
 			if (cadena1[j] == cadena2[i]){
 				j++; cont_iguales++;  
 				if(cont_iguales == letras)return 0;
 			}
 			else{j = 0;} // si no son iguales vuelve al principio
-		}		
+		}
 	}
-
 	return 1;	
-}
+}	
 //-----------------------------------------//
 
 /*------- Comparar palabras -------*/
