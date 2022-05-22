@@ -590,15 +590,11 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 //**************************  OPCIÓN 6  ***********************//
 
 /*------- Muestra un libro y una id -------*/
-void mostrarLibroConPalabra(LibrosConPalabra *libro)
-{
-	printf("Titulo: %s\n",libro->nombreLibro);
-	printf("ID: %d\n\n", libro->idLibro);
-}
 
 double calcularRelevancia(unsigned long ocurrenciaP,
 	unsigned long palabrasD, int docs, unsigned long librosConP)
 {
+	//Se calcula en dos instrucciones por cuestion de legibilidad
 	double ret = (double) ocurrenciaP/palabrasD;
 	ret = ret * (double) log(docs/librosConP);
 
@@ -607,11 +603,12 @@ double calcularRelevancia(unsigned long ocurrenciaP,
 
 int cmpfunc (const void *a,const void *b)
 {
+	//a y b son punteros a un array de punteros por lo tanto se debe hacer esto para acceder a los datos:
 	LibrosConPalabra *aux1 = *(LibrosConPalabra **) a;
 	LibrosConPalabra *aux2 = *(LibrosConPalabra **) b;
 
 	double ret = aux1->relevancia - aux2->relevancia;
-	return (int) (ret * 100);
+	return (int) (ret * 100); //Ya que la func retorna un int se multiplica ret por 100 y se hace el casting
 }
 //-----------------------------------------//
 
@@ -620,29 +617,30 @@ void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras, int docs)
 {
 	char stringPalabra[101];
 	Palabra *palabra;
-	LibrosConPalabra **arrLibros, *libroPalabra;
+	LibrosConPalabra **arrLibros, *libroPalabra; //El array sirve para usar qsort()
 	Libro *libro;
-	int i = 0;
+	int i = 0; //contador para ir rellenando el array
 
+	//Recibe el input del usuario
 	printf("Ingrese la palabra a buscar: ");
 	scanf("%[0-9a-zA-Z ,-]", stringPalabra);
 	getchar();
 
-
+	//Buscar la palabra, crear el array de libros e inicializar libroPalabra como el primer elemento de la lista
 	palabra = (Palabra *) searchMap(mapaPalabras, stringPalabra);
 	arrLibros = (LibrosConPalabra **) malloc(palabra->LibrosWithPalabra * sizeof(LibrosConPalabra *));
 	libroPalabra = (LibrosConPalabra *) firstList(palabra->ConPalabra);
 
 	while(libroPalabra)
 	{
-		libro = (Libro *) searchMap(mapaLibros, libroPalabra->nombreLibro);
-		libroPalabra->relevancia = calcularRelevancia(libroPalabra->ocurrenciaEnLibro, libro->cantPalabrasBook, docs, palabra->LibrosWithPalabra);
-		arrLibros[i] = libroPalabra;
+		libro = (Libro *) searchMap(mapaLibros, libroPalabra->nombreLibro); //Se busca el libro en el mapa de libros
+		libroPalabra->relevancia = calcularRelevancia(libroPalabra->ocurrenciaEnLibro, libro->cantPalabrasBook, docs, palabra->LibrosWithPalabra); //Se calcula la relevancia
+		arrLibros[i] = libroPalabra; //Se inserta el libroPalabra en el array
 		libroPalabra = nextList(palabra->ConPalabra);
 		i++;
 	}
 
-	qsort(arrLibros, i, sizeof(LibrosConPalabra *), cmpfunc);
+	qsort(arrLibros, i, sizeof(LibrosConPalabra *), cmpfunc); //Se realiza el qsort
 
 	printf("\nLibros con la palabra \"%s\": \n\n", palabra->palabra);
 
