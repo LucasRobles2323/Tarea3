@@ -434,11 +434,9 @@ int compare_strings(char cadena1[101], char *cadena2)
 		if (tolower(cadena1[i]) != tolower(cadena2[i])) {return 1;}
 	}return 0;
 }
-
-
 //-----------------------------------------//
 
-/*----------------- OPCIÓN 3: -----------------*/
+/*------- Busca y muestra libro por el titulo -------*/
 void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 {
 	book = firstMap(booksMap);
@@ -457,17 +455,19 @@ void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 		printf("Libro no encontrado\n");
 		return;
 }
-//-------------------------------------------------------------//
+//-----------------------------------------//
 
+/*----------------- OPCIÓN 3: -----------------*/
 void BuscarLibro(Libro* book, Map* booksMap)
 {
 	printf("Ingrese el nombre de los ejemplares que desea buscar \n");
-		char title[1000];
-		scanf("%[0-9a-zA-Z ,-]", title);
-		getchar();
-		BuscarLibroTitulo(book, booksMap, title);
-		return;
+	char title[1000];
+	scanf("%[0-9a-zA-Z ,-]", title);
+	getchar();
+	BuscarLibroTitulo(book, booksMap, title);
+	return;
 }
+//-------------------------------------------------------------//
 
 //**************************************************************//
 
@@ -593,7 +593,6 @@ void mostrarLibroConPalabra(LibrosConPalabra *libro)
 	printf("Titulo: %s\n",libro->nombreLibro);
 	printf("ID: %d\n\n", libro->idLibro);
 }
-
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 6: -----------------*/
