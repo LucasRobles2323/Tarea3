@@ -265,10 +265,21 @@ Libro *createBook(char *WORD, unsigned long ID, char *TITLE){
 }
 //-----------------------------------------//
 
+/*------- Transforma en minuscula los caracteres alfabeticos -------*/
+void minsuculas(char *cadena){
+	for (size_t i = 0; cadena[i]; i++)
+	{
+		if(isalpha(cadena[i]) != 0){cadena[i] = tolower(cadena[i]);}
+	}
+}
+//-----------------------------------------//
+
 /*------- Guardar en los mapas la informacion -------*/
 void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave, 
                      Map *words_Map, Map *books_Map){
 	
+	minsuculas(wordToSave);
+
 	Palabra *auxWord = NULL;
 	LibrosConPalabra *auxWord2 = NULL;
 	if (searchMap(words_Map, wordToSave) == NULL)
@@ -470,6 +481,18 @@ void calcularFrecuencia(PalabraEnLibro *aux, double cantWords){
 }
 //-----------------------------------------//
 
+/*------- Muestra la palabraDelLibro con su frecuencia y ocurrencia -------*/
+void mostrarWordDelLibro(PalabraEnLibro *see, int num){
+	printf("  ");
+
+	if (num < 10){printf(" ");}
+	printf("%d.- ", num);
+
+	printf("La palabra \"%s\" se repite", see->String);
+	printf(" %.0f y tiene como frecuencia %lf\n", see->ocurrenciaString, see->frecuencia);
+}
+//-----------------------------------------//
+
 /*------- Crear Arreglo en el orden requerido -------*/
 void MostrarMasRelevantes(Libro *BOOK){
 	PalabraEnLibro **array = (PalabraEnLibro**) calloc(10, sizeof(PalabraEnLibro*));
@@ -514,13 +537,13 @@ void MostrarMasRelevantes(Libro *BOOK){
 			}
 		}
 	}
-
+	printf("\nLas palabras mas relevantes en el libro \"%s\" son:\n", BOOK->nameBook);
 	for (size_t i = 0; i < 10; i++)
 	{
-		printf("%lf  ", array[i]->frecuencia);
+		mostrarWordDelLibro(array[i], i+1);
 	}
 }
-
+//-----------------------------------------//
 
 /*----------------- OPCIÓN 4: -----------------*/
 void PalabrasConMayotFrecuencia(Map* allBooks){
