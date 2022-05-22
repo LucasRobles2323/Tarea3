@@ -465,15 +465,62 @@ void BuscarLibro(Libro* book, Map* booksMap)
 //**************************  OPCIÓN 4  ***********************//
 
 /*------- Calcula la frecuencia de cada una -------*/
-void calcularFrecuencia(Libro *onlyBook){
-	PalabraEnLibro *aux = firstList(onlyBook->EnLibro);
-	while (aux != NULL)
-	{
-		aux->frecuencia = (double) aux->ocurrenciaString / (double)onlyBook->cantPalabrasBook;
-		aux = nextList(onlyBook->EnLibro);
-	}
+void calcularFrecuencia(PalabraEnLibro *aux, double cantWords){
+	aux->frecuencia = (double) aux->ocurrenciaString / cantWords;
 }
 //-----------------------------------------//
+
+/*------- Crear Arreglo en el orden requerido -------*/
+void MostrarMasRelevantes(Libro *BOOK){
+	PalabraEnLibro **array = (PalabraEnLibro**) calloc(10, sizeof(PalabraEnLibro*));
+	PalabraEnLibro *aux = firstList(BOOK->EnLibro);
+	int menor = 0, ocupados = 0;
+	while (aux)
+	{
+		calcularFrecuencia(aux, BOOK->cantPalabrasBook);
+
+		if (ocupados < 9){
+			for (size_t i = 0; i < 10; i++){
+				if (array[i]){
+					if (array[i]->frecuencia < array[menor]->frecuencia){
+						menor = i;
+					}
+				}
+
+				if (!array[i]){array[i] = aux; break;}
+			}
+		}
+		else{
+			if (array[menor]->frecuencia < aux->frecuencia)
+			{array[menor] = aux;}
+		}
+		
+		aux = nextList(BOOK->EnLibro);
+	}
+
+	if (array[menor] < array[9]){
+		aux = array[9];
+		array[9] = array[menor];
+		array[menor] = aux;
+	}
+
+	for (size_t i = 0; i < 7; i++){
+		for (size_t j = i+1; j < 8; j++){
+			if (array[i]->frecuencia < array[j]->frecuencia)
+			{
+				aux = array[i];
+				array[i] = array[j];
+				array[j] = aux;
+			}
+		}
+	}
+
+	for (size_t i = 0; i < 10; i++)
+	{
+		printf("%lf  ", array[i]->frecuencia);
+	}
+}
+
 
 /*----------------- OPCIÓN 4: -----------------*/
 void PalabrasConMayotFrecuencia(Map* allBooks){
@@ -494,7 +541,7 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 		printf("El libro no existe o no ha sido cargado");
 		return;
 	}
-	calcularFrecuencia(aux);
+	MostrarMasRelevantes(aux);
 }
 //-------------------------------------------------------------//
 
