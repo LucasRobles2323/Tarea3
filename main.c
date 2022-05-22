@@ -595,7 +595,7 @@ void mostrarWordDelLibro(PalabraEnLibro *see, int num){
 	printf("%d.- ", num);
 
 	printf("La palabra \"%s\" se repite", see->String);
-	printf(" %.0f y tiene como frecuencia %lf\n", see->ocurrenciaString, see->frecuencia);
+	printf(" %.0f veces y tiene como frecuencia %lf\n", see->ocurrenciaString, see->frecuencia);
 }
 //-----------------------------------------//
 
