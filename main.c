@@ -525,50 +525,63 @@ void mostrarWordDelLibro(PalabraEnLibro *see, int num){
 }
 //-----------------------------------------//
 
+//**************************  OPCIÓN 4  ***********************//
+
+/*------- Calcula la frecuencia de cada una -------*/
+void calcularFrecuencia(PalabraEnLibro *aux, double cantWords){
+	aux->frecuencia = (double) aux->ocurrenciaString / cantWords;
+}
+//-----------------------------------------//
+
+/*------- Funcion comparar para ordenar con qsort por relevancia -------*/
+int compararFrecuencia (const void *a,const void *b)
+{
+	PalabraEnLibro *aux1 = *(PalabraEnLibro **) a;
+	PalabraEnLibro *aux2 = *(PalabraEnLibro **) b;
+
+	double frecA = aux1->frecuencia;
+	double frecB = aux2->frecuencia;
+
+	if (frecA < frecB){return 1;}
+	else if (frecB < frecA){return -1;}
+	
+
+	return 0;
+}
+//-----------------------------------------//
+
+/*------- Muestra la palabraDelLibro con su frecuencia y ocurrencia -------*/
+void mostrarWordDelLibro(PalabraEnLibro *see, int num){
+	printf("  ");
+
+	if (num < 10){printf(" ");}
+	printf("%d.- ", num);
+
+	printf("La palabra \"%s\" se repite", see->String);
+	printf(" %.0f y tiene como frecuencia %lf\n", see->ocurrenciaString, see->frecuencia);
+}
+//-----------------------------------------//
+
 /*------- Crear Arreglo en el orden requerido -------*/
 void MostrarMasRelevantes(Libro *BOOK){
 	PalabraEnLibro **array = (PalabraEnLibro**) calloc(10, sizeof(PalabraEnLibro*));
 	PalabraEnLibro *aux = firstList(BOOK->EnLibro);
-	int menor = 0, ocupados = 0;
+	int ocupados = 0;
 	while (aux)
 	{
 		calcularFrecuencia(aux, BOOK->cantPalabrasBook);
 
-		if (ocupados < 9){
-			for (size_t i = 0; i < 10; i++){
-				if (array[i]){
-					if (array[i]->frecuencia < array[menor]->frecuencia){
-						menor = i;
-					}
-				}
-
-				if (!array[i]){array[i] = aux; break;}
-			}
+		if (ocupados < 10){
+			array[ocupados] = aux;
+			ocupados++;
 		}
 		else{
-			if (array[menor]->frecuencia < aux->frecuencia)
-			{array[menor] = aux;}
+			qsort(array, 10, sizeof(LibrosConPalabra*), compararFrecuencia);
 		}
 		
 		aux = nextList(BOOK->EnLibro);
 	}
 
-	if (array[menor] < array[9]){
-		aux = array[9];
-		array[9] = array[menor];
-		array[menor] = aux;
-	}
-
-	for (size_t i = 0; i < 7; i++){
-		for (size_t j = i+1; j < 8; j++){
-			if (array[i]->frecuencia < array[j]->frecuencia)
-			{
-				aux = array[i];
-				array[i] = array[j];
-				array[j] = aux;
-			}
-		}
-	}
 	printf("\nLas palabras mas relevantes en el libro \"%s\" son:\n", BOOK->nameBook);
 	for (size_t i = 0; i < 10; i++)
 	{
