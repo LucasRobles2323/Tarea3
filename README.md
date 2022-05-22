@@ -363,28 +363,37 @@ void PalabrasConMayotFrecuencia(Map* allBooks)
 /*------- Crea un struct Relevancia -------*/
 Relevancia *crearLibro (char *titulo, int numeroDocumento)
 {
-
+Se reserva Memoria
+se añaden los valores
+Y se crea el mapa con una funcion para que esta se ordene de mayor a menor
 }
 //-----------------------------------------//
 
 /*------- Crea un struct PalabraRelevante -------*/
 PalabraRelevante *crearpalabra (float relevancia)
 {
-
+Se reserva memoria.
+se añade los valores
+y se crea una lista.
 }
 //-----------------------------------------//
 
 /*------- Calcula la relevancia de la palabra -------*/
 float calcularRel (unsigned long libroConPalabra, unsigned long cantPalabrasLibro, int contador, float ocurrenciasString)
 {
+Se calcula el logaritmo de (contador/libroConPalabra)
+Se calcula la division entre (ocurrenciasString/CantPalabrasLibro)
 
+Esto lo hice asi para ver donde me daba problemas una vez solucionado lo deje asi por si hacia un cambio dejaba de funcionar xd
+
+Returna la multiplicacion entre logaritmo y division
 }
 //-----------------------------------------//
 
 /*------- Borra completamente un mapa -------*/
 void borrarMapa (Map *mapaErase)
 {
-
+Recorre el mapa y los va borrando.
 }
 //-----------------------------------------//
 
@@ -392,12 +401,55 @@ void borrarMapa (Map *mapaErase)
 void relevanciaCreate (Map *relevancia_map, Map *libros_map, Map *palabras_map)
 {
 
+Se pregunta si el mapa libro_map existe
+/en caso de no ser asi se envia un mensaje y se sale de la funcion
+
+se declaran las variables necesarias
+
+se hace un ciclo while para saber cuantos libros hay en el mapa libros_map
+-Si el contador es 1 se envia un mensaje y se sale de la funcion.
+    -Esto es porque si es solo 1 documento sera un logatimo (1/1) ya que todas las palabras se repiten por ser 1 solo documento y log (1) es 0 por lo cual todas las palabras dan 0
+    
+un if donde se pregunta si el mapa de relevancia es NULL o no
+
+si es NULL:
+           -La idea aqui es hacer un mapa de key "titulo del libro" que tenga de  valor otro mapa de key "relevancia",
+	   un char para el titulo y un int para la cantidad de documentos.
+	   -Despues al mapa de key relevancia tendra valor una lista de palabras y un float para la relevancia
+	   -La lista es para guardar muchas palabras en caso de que 2 o mas palabras tengan la misma relevancia
+	   
+	   Con esto para la busqueda deberia ser asi.
+	   -Se pide el nombre del titulo al usuario.
+	   -searchmap (maparelevancia, titulo del libro) // para buscar la relevancia de un libro en especifico
+	   -despues el mapa (relevancia) esta ordenada por defecto asique el firstMap contendra la/las palabras mas relevantes
+	   y dentro de ese mapa estaran la lista con las palabras
+	   
+Si no es NULL:
+                -Se compara si se ha añadido nuevos docuementos en caso de ser asi entrara en el if
+		-dentro del if se borrara el mapa de relevancia
+		-Y se hace uno nuevo apartir de los nuevos documentos hechos de la misma manera que anteriormente explicado.
+		-esto porque al añadir mas documentos cambia el valor de la relevancia en una gran cantidad de palabras.
+		
+		-En caso de que no se haya añadido nuevos documentos no se ejecutara nada.
+		
 }
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 5: -----------------*/
 void mostrarRelevancia (Map * mapa)
 {
+
+Primero se ve si el mapa existe
+/En caso de que no existe se dice por pantalla y se sale de la funcion.
+
+recorre el mapa y muestra los libros disponibles
+
+Despues se le pregunta al usuario cual libro quiere ver las palabras
+
+Busca la palabra dentro del mapa con key titulo del libro
+/Si escribe mal o coloca algo nada que ver se le mandara un mensaje diciendo que algo ocurrio y se sale de la funcion
+
+Despues muestra por pantalla las 10 palabras del libro escrito por el usuario.
 
 }
 //-------------------------------------------------------------//
