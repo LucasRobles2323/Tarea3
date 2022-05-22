@@ -13,7 +13,7 @@ Estudiantes PUCV curso: ICI2240-1  ESTRUCTURA DE DATOS
 - ### Lucas Robles: 
     Pts premio/castigo: 0.
 
-    Siento que en el momento que supe que trabajariamos con directorios, deberia haber investigado como era posible, fue dificil lograr abrir bien el directorio, ademas de que empece a hacer esta tarea mas tarde de lo que deberia
+    Siento que en el momento que supe que trabajariamos con directorios, deberia haber investigado como era posible, fue dificil lograr abrir bien el directorio, ademas de que empece a hacer esta tarea mas tarde de lo que deberia. Ademas subi como 5 commit con otro correo que no sale en colaboradres e hice un commit mal y lo resubi con el mismo mensaje commit
 
 
 - ### Sebastián Aguilera: 
@@ -34,23 +34,23 @@ Estudiantes PUCV curso: ICI2240-1  ESTRUCTURA DE DATOS
 ## 1. Como compilar y ejecutar la tarea:
 Clonar el repositorio en Desktop
 
-![Clonar Repositorio](https://drive.google.com/uc?id=1R42hQG_1DG673nJbgIc5LBCiScYoAu3g)
+![Clonar Repositorio](https://drive.google.com/uc?id=1rLlpu7gNdPBWC2hlTGqLEKTb_JHMI1qj)
 
 Abrir el clon del repositorio con VSCode. Una vez abierto se debe abrir terminal powershell.
 
 Con la terminal powershell abierta se escribe lo siguiente:
 
-![gcc](https://drive.google.com/uc?id=1nEugVI19nlxOMiG2Rjv-kGEOZiIAbafy)
+![gcc](https://drive.google.com/uc?id=14duVxmEGVqfAFJMAqufBglbaP5Eg8Ipf)
 
 De esa forma se creo o modifico el ejecutable, que se ejecuta de la siguiente manera:
 
-![Ejecutable](https://drive.google.com/uc?id=1QEmvjK3MmqGN9h4Ow203dbGWbx2zi7JZ)
+![Ejecutable](https://drive.google.com/uc?id=1gy5nyPzsGwZ1MPQUfp6-T_ZctNViaxq9)
 
 Despues de una advertencia al ejecutar el Test, se desplegaria el menu
 
 Este sería el menú.
 
-![gcc](https://drive.google.com/uc?id=1OxVB_gnCHkasXMonj8im3nPW8chb5co8)
+![Menú](https://drive.google.com/uc?id=1RBcblajhABoDbq8zqfqWFJ58gxsX5STi)
 
 
 ## 2. Las opciones que funcionan correctamente y las que no lo hacen indicando posibles causas
@@ -60,7 +60,7 @@ Hasta ahora todas las funciones están funcionales en casos normales ósea sin q
 ## Structs:
 Contiene 2 struct, una para las canciones y otra destinada a las listas de reproducción
 
-![Menú](https://drive.google.com/uc?id=1O5O7Lz_MY8g0kLvSteIbZcGueSIJsLyr)
+![Structs](https://drive.google.com/uc?id=1NvzTyFpgU4nEvHODGwUkh-O3uSvGLImu)
 
 
 ## Funciones:
@@ -99,6 +99,13 @@ Función para comparar claves de tipo long retorna 1 si son iguales
 long lower_than_long(void * key1, void * key2) 
 {
 Función para comparar claves de tipo long retorna 1 si son key1<key2
+}
+
+int compare(void * key1, void * key2)
+{
+Función que retorna negativo si queremos que key1 vaya antes que key2 
+en el mapa, retorna 0 si consideramos que las dos claves son iguales 
+y positivo si key1 debe ir antes.
 }
 ~~~
 ---
@@ -161,6 +168,13 @@ char *get_nameFile(char *archive, char *directory)
 }
 //-----------------------------------------//
 
+/*------- Elimina caracteres no alfabeticos -------*/
+void quitarNoAlfabeticos(char *beforeString, bool quitarSpaces)
+{
+
+}
+//-----------------------------------------//
+
 /*------- separar palabras del file -------*/
 char* nextWord (FILE *f)
 {
@@ -216,13 +230,13 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 //-----------------------------------------//
 
 /*------- Leer Archivo -------*/
-void ReadTxt(Map* string_map, Map* book_map, char *name, char *nameDirectory)
+void ReadTxt(Map* string_map, Map* book_map, char *name, char *nameDirectory, int *docTotal)
 {
 
 }
 
 /*----------------- OPCIÓN 1: -----------------*/
-void CargarDocumento(Map *palabrasMap, Map *librosMap)
+void CargarDocumento(Map *palabrasMap, Map *librosMap, int *dTotal)
 {
 
 }
@@ -264,33 +278,14 @@ int compare_strings(char cadena1[101], char *cadena2)
 /*------- Busca y muestra libro por el titulo -------*/
 void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 {
-	book = firstMap(booksMap);
-		while(book != NULL)
-		{
-			if(compare_strings(title, book->nameBook) == 0)
-			{	
-				printf("\n");
-				printf("Libro encontrado: \n");
-				printf("\n");
-				mostrarLibro(book);	return;
 
-			}else{book = nextMap(booksMap);}
-		}
-
-		printf("Libro no encontrado\n");
-		return;
 }
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 3: -----------------*/
 void BuscarLibro(Libro* book, Map* booksMap)
 {
-	printf("Ingrese el nombre de los ejemplares que desea buscar \n");
-	char title[1000];
-	scanf("%[0-9a-zA-Z ,-]", title);
-	getchar();
-	BuscarLibroTitulo(book, booksMap, title);
-	return;
+
 }
 //-------------------------------------------------------------//
 
@@ -306,14 +301,21 @@ void calcularFrecuencia(PalabraEnLibro *aux, double cantWords){
 }
 //-----------------------------------------//
 
+/*------- Funcion comparar para ordenar con qsort por relevancia -------*/
+int compararFrecuencia (const void *a,const void *b)
+{
+Funcion comparar necesaria para el qsort, en este caso ordena las frecuencias de mayor a menor.
+}
+//-----------------------------------------//
+
 /*------- Muestra la palabraDelLibro con su frecuencia y ocurrencia -------*/
 void mostrarWordDelLibro(PalabraEnLibro *see, int num){
-
+Muestra por pantalla la palabra recibida, sus repeticiones y su frecuencia, ademas de un numero inicial con la que contiene mayor frecuencia con un numero 1 precedente
 }
 //-----------------------------------------//
 
 /*------- Crear Arreglo en el orden requerido -------*/
-void MostrarMasRelevantes(Libro *BOOK){
+void MostrarMasFrecuentes(Libro *BOOK){(Libro *BOOK){
 
 }
 //-----------------------------------------//
@@ -338,14 +340,24 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 ~~~
 //**************************  OPCIÓN 6  ***********************//
 
-/*------- Muestra un libro y una id -------*/
-void mostrarLibroConPalabra(LibrosConPalabra *libro){
+/*------- Calcula Relevancia -------*/
+double calcularRelevancia(unsigned long ocurrenciaP,
+	unsigned long palabrasD, int docs, unsigned long librosConP)
+{
+
+}
+//-----------------------------------------//
+
+/*------- Funcion comparar para ordenar con qsort por relevancia -------*/
+int cmpfunc (const void *a,const void *b)
+{
 
 }
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 6: -----------------*/
-void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras){
+void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras, int docs)
+{
 
 }
 //-------------------------------------------------------------//

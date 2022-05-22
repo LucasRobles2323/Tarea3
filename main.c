@@ -17,29 +17,31 @@ typedef struct {
 	char *nombreLibro;
 	unsigned long ocurrenciaEnLibro;
 	double relevancia;
-}LibrosConPalabra;
+}LibrosConPalabra; // Struct que guarda los datos de cada libro para una palabra especifica
 
 typedef struct {
 	char *palabra;
 	unsigned long ocurrenciaPalabra;
 	unsigned long LibrosWithPalabra;
-	List *ConPalabra;
-}Palabra;
+	List *ConPalabra;// Lista de struct LibrosConPalabras
+}Palabra; //Struct que guarda los datos de una palabra para el mapa de palabras
 
 typedef struct {
 	char *String;
 	float ocurrenciaString;
 	double frecuencia;
 	double relevancia;
-}PalabraEnLibro;
+}PalabraEnLibro; // Struct que guarda los datos de cada palabra para un libro especifico
 
 typedef struct {
 	int idBook;
 	char *nameBook;
 	unsigned long cantPalabrasBook;
 	unsigned long long cantCaracteresBook;
-	List *EnLibro;
-}Libro;
+	List *EnLibro; // Lista de struct PalabraEnLibro
+}Libro; //Struct que guarda los datos de un libro para el mapa de libro
+
+
 
 //------------------FUNCIONES-------------------------//
 
@@ -163,7 +165,7 @@ char * _strdup(const char * str){
 //**************************  OPCIÓN 1  ***********************//
 
 /*----------------- Lista con los text a abrir -----------------*/
-List *cantArchiveOpen(char *Archives, size_t *cant){
+List *cantArchiveOpen(char *Archives, size_t *cant){ //Crea una lista con las palabras separadas por espacio
 	List *newList = createList();
     char *Text = strtok(Archives, " ");
 	while (Text != NULL)
@@ -179,7 +181,7 @@ List *cantArchiveOpen(char *Archives, size_t *cant){
 //-----------------------------------------//
 
 /*------- Abrir o no el archivo -------*/
-int esText(char *nombreArchivo, List *archiveToOpen, size_t *cant){
+int esText(char *nombreArchivo, List *archiveToOpen, size_t *cant){//Confirma si abrir un archivo del directorio
     char *OpenYoN = (char*)firstList(archiveToOpen);
 	while (OpenYoN != NULL)
     {
@@ -195,7 +197,7 @@ int esText(char *nombreArchivo, List *archiveToOpen, size_t *cant){
 //-----------------------------------------//
 
 /*------- Conseguir path al txt -------*/
-char *get_nameFile(char *archive, char *directory){
+char *get_nameFile(char *archive, char *directory){ // Crea el path para el fopen y abrir bien el archivo
 	char aux[200];
 	strcpy(aux, directory);
 	strcat(aux, "/");
@@ -214,7 +216,7 @@ void quitarNoAlfabeticos(char *beforeString, bool quitarSpaces){
 	
 	for (size_t i = 0; i < largo; i++){
 		
-		if (beforeString[i] == ' ' && !quitarSpaces){
+		if (beforeString[i] == ' ' && !quitarSpaces){ // Para guardar el titulo no borra los espacios
 			newString[indice] = beforeString[i];
 			indice++; continue;
 		}
@@ -309,12 +311,14 @@ void minsuculas(char *cadena){
 void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave, 
                      Map *words_Map, Map *books_Map){
 	
-	minsuculas(wordToSave);
+	minsuculas(wordToSave); // Transforma en minusculas las palabras a guardar
 
+
+	// Guarda los datos en el mapa Palabras
 	Palabra *auxWord = NULL;
 	LibrosConPalabra *auxWord2 = NULL;
 	if (searchMap(words_Map, wordToSave) == NULL)
-	{
+	{// Si no estaba guardado el dato, lo guarda. Si existia aumentara ocurrencias
 		auxWord = createWord(wordToSave);
 		auxWord->ConPalabra = createList();
 		auxWord2 = createBookConWord(atoi(idToSave), titleToSave);
@@ -326,7 +330,7 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
         auxWord->ocurrenciaPalabra++;
         auxWord2 = firstList(auxWord->ConPalabra);
 		while (auxWord2)
-		{
+		{// Revisa si el libro esta en la lista de libros donde se encuentra la palabra
 			if (is_equal_string(titleToSave, auxWord2->nombreLibro) == 1)
 			{
 				auxWord2->ocurrenciaEnLibro++;
@@ -341,10 +345,11 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 		}
 	}
 
+	// Guarda los datos en el mapa Libros
 	Libro *auxBook = NULL;
 	PalabraEnLibro *auxBook2 = NULL;
 	if (searchMap(books_Map, titleToSave) == NULL)
-	{
+	{// Si no estaba guardado el dato, lo guarda. Si existia aumentara ocurrencias
 		auxBook = createBook(wordToSave, atoi(idToSave),titleToSave);
 		auxBook->EnLibro = createList();
 		auxBook2 = createWordEnBook(wordToSave);
@@ -356,7 +361,7 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 		auxBook->cantCaracteresBook += strlen(wordToSave);
 		auxBook2 = firstList(auxBook->EnLibro);
 		while (auxBook2)
-		{
+		{// Revisa si la palabra esta en la lista de palabras del libro
 			if (is_equal_string(auxBook2->String, wordToSave))
 			{
 				auxBook2->ocurrenciaString++;
@@ -534,7 +539,7 @@ int compararFrecuencia (const void *a,const void *b)
 void mostrarWordDelLibro(PalabraEnLibro *see, int num){
 	printf("  ");
 
-	if (num < 10){printf(" ");}
+	if (num < 10){printf(" ");}//Para que los numeros esten a la misma altura
 	printf("%d.- ", num);
 
 	printf("La palabra \"%s\" se repite", see->String);
@@ -543,10 +548,10 @@ void mostrarWordDelLibro(PalabraEnLibro *see, int num){
 //-----------------------------------------//
 
 /*------- Crear Arreglo en el orden requerido -------*/
-void MostrarMasRelevantes(Libro *BOOK){
-	PalabraEnLibro **array = (PalabraEnLibro**) calloc(10, sizeof(PalabraEnLibro*));
+void MostrarMasFrecuentes(Libro *BOOK){
+	PalabraEnLibro **array = (PalabraEnLibro**) calloc(11, sizeof(PalabraEnLibro*));
 	PalabraEnLibro *aux = firstList(BOOK->EnLibro);
-	int ocupados = 0;
+	int ocupados = 0; //Es para saber si ya se ha ocupado todo el arreglo para que el nuevo dato se ordene
 	while (aux)
 	{
 		calcularFrecuencia(aux, BOOK->cantPalabrasBook);
@@ -556,6 +561,7 @@ void MostrarMasRelevantes(Libro *BOOK){
 			ocupados++;
 		}
 		else{
+			array[10] = aux;
 			qsort(array, 10, sizeof(LibrosConPalabra*), compararFrecuencia);
 		}
 		
@@ -576,6 +582,7 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 	printf("Ingrese el id de un libro: ");
 	fscanf(stdin, "%d", &id);
 	getchar();
+
 	Libro *aux = firstMap(allBooks);
 	while (aux != NULL)
 	{
@@ -589,7 +596,8 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 		printf("El libro no existe o no ha sido cargado");
 		return;
 	}
-	MostrarMasRelevantes(aux);
+
+	MostrarMasFrecuentes(aux);
 }
 //-------------------------------------------------------------//
 
