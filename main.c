@@ -205,10 +205,39 @@ char *get_nameFile(char *archive, char *directory){
 }
 //-----------------------------------------//
 
+/*------- Elimina caracteres no alfabeticos -------*/
+void quitarNoAlfabeticos(char *beforeString, bool quitarSpaces){
+	if (is_equal_string(beforeString, "Title:")){return;}
+	int largo = strlen(beforeString);
+	char newString[largo];
+	int indice = 0;
+	
+	for (size_t i = 0; i < largo; i++){
+		
+		if (beforeString[i] == ' ' && !quitarSpaces){
+			newString[indice] = beforeString[i];
+			indice++; continue;
+		}
+		
+		if ((beforeString[i] >= 'A' && beforeString[i] <= 'Z' && beforeString[i] != ':')||
+		    (beforeString[i] >= 'a' && beforeString[i] <= 'z' && beforeString[i] != ':')){
+			newString[indice] = beforeString[i];
+			indice++;
+		}
+	}
+	if (indice != largo-1)
+	{
+		newString[indice] = 0;
+	}
+	strcpy(beforeString, newString);
+}
+//-----------------------------------------//
+
 /*------- separar palabras del file -------*/
 char* nextWord (FILE *f) {
     char WORD[1024];
     if (fscanf(f, " %1023s", WORD) == 1){
+		quitarNoAlfabeticos(WORD, true);
 		return strdup(WORD);
 	}
     else {return NULL;}
@@ -218,8 +247,10 @@ char* nextWord (FILE *f) {
 /*------- separar palabras del file -------*/
 char* get_title(FILE *f) {
     char TITLE[1024];
-    if (fscanf(f, " %1023[^\n]", TITLE) == 1)
-    {return strdup(TITLE);}
+    if (fscanf(f, " %1023[^\n]", TITLE) == 1){
+		quitarNoAlfabeticos(TITLE, false);
+		return strdup(TITLE);
+	}
     else {return NULL;}
 }
 //-----------------------------------------//
@@ -268,8 +299,7 @@ Libro *createBook(char *WORD, unsigned long ID, char *TITLE){
 
 /*------- Transforma en minuscula los caracteres alfabeticos -------*/
 void minsuculas(char *cadena){
-	for (size_t i = 0; cadena[i]; i++)
-	{
+	for (size_t i = 0; cadena[i]; i++){
 		if(isalpha(cadena[i]) != 0){cadena[i] = tolower(cadena[i]);}
 	}
 }
@@ -483,6 +513,23 @@ void calcularFrecuencia(PalabraEnLibro *aux, double cantWords){
 }
 //-----------------------------------------//
 
+/*------- Funcion comparar para ordenar con qsort por relevancia -------*/
+int compararFrecuencia (const void *a,const void *b)
+{
+	PalabraEnLibro *aux1 = *(PalabraEnLibro **) a;
+	PalabraEnLibro *aux2 = *(PalabraEnLibro **) b;
+
+	double frecA = aux1->frecuencia;
+	double frecB = aux2->frecuencia;
+
+	if (frecA < frecB){return 1;}
+	else if (frecB < frecA){return -1;}
+	
+
+	return 0;
+}
+//-----------------------------------------//
+
 /*------- Muestra la palabraDelLibro con su frecuencia y ocurrencia -------*/
 void mostrarWordDelLibro(PalabraEnLibro *see, int num){
 	printf("  ");
@@ -499,46 +546,22 @@ void mostrarWordDelLibro(PalabraEnLibro *see, int num){
 void MostrarMasRelevantes(Libro *BOOK){
 	PalabraEnLibro **array = (PalabraEnLibro**) calloc(10, sizeof(PalabraEnLibro*));
 	PalabraEnLibro *aux = firstList(BOOK->EnLibro);
-	int menor = 0, ocupados = 0;
+	int ocupados = 0;
 	while (aux)
 	{
 		calcularFrecuencia(aux, BOOK->cantPalabrasBook);
 
-		if (ocupados < 9){
-			for (size_t i = 0; i < 10; i++){
-				if (array[i]){
-					if (array[i]->frecuencia < array[menor]->frecuencia){
-						menor = i;
-					}
-				}
-
-				if (!array[i]){array[i] = aux; break;}
-			}
+		if (ocupados < 10){
+			array[ocupados] = aux;
+			ocupados++;
 		}
 		else{
-			if (array[menor]->frecuencia < aux->frecuencia)
-			{array[menor] = aux;}
+			qsort(array, 10, sizeof(LibrosConPalabra*), compararFrecuencia);
 		}
 		
 		aux = nextList(BOOK->EnLibro);
 	}
 
-	if (array[menor] < array[9]){
-		aux = array[9];
-		array[9] = array[menor];
-		array[menor] = aux;
-	}
-
-	for (size_t i = 0; i < 7; i++){
-		for (size_t j = i+1; j < 8; j++){
-			if (array[i]->frecuencia < array[j]->frecuencia)
-			{
-				aux = array[i];
-				array[i] = array[j];
-				array[j] = aux;
-			}
-		}
-	}
 	printf("\nLas palabras mas relevantes en el libro \"%s\" son:\n", BOOK->nameBook);
 	for (size_t i = 0; i < 10; i++)
 	{
@@ -590,7 +613,17 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 //**************************  OPCIÓN 6  ***********************//
 
 /*------- Muestra un libro y una id -------*/
+<<<<<<< HEAD
+=======
+void mostrarLibroConPalabra(LibrosConPalabra *libro)
+{
+	printf("Titulo: %s\n",libro->nombreLibro);
+	printf("ID: %d\n\n", libro->idLibro);
+}
+//-----------------------------------------//
+>>>>>>> 7f1cac7bc58cb6fa8ee0a09bfac7ac05aa622256
 
+/*------- Calcula Relevancia -------*/
 double calcularRelevancia(unsigned long ocurrenciaP,
 	unsigned long palabrasD, int docs, unsigned long librosConP)
 {
@@ -600,7 +633,9 @@ double calcularRelevancia(unsigned long ocurrenciaP,
 
 	return ret;
 }
+//-----------------------------------------//
 
+/*------- Funcion comparar para ordenar con qsort por relevancia -------*/
 int cmpfunc (const void *a,const void *b)
 {
 	//a y b son punteros a un array de punteros por lo tanto se debe hacer esto para acceder a los datos:
@@ -713,7 +748,7 @@ int main() {
             /*------- Buscar un libro por titulo -------*/
 			;Libro* book;
 			BuscarLibro(book, librosGeneral);
-			;
+			break;;
 			//-----------------------------------------//
 		case 4:
 			/*------- Palabras con mayor frecuencia -------*/
