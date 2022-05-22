@@ -227,20 +227,119 @@ Recibe una cadena de caracteres y deja todas las letras alfabetiacas en minuscul
 void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave, 
                      Map *words_Map, Map *books_Map, char *txt){
 {
+Usa la funcion minusculas() en la palabra a guardar para dejarla en minuscula.
 
+A continuacion crea variables auxiliares de los struct Palabra y LibrosConPalabras para guardar la palabra el el mapa de palabras
+
+Usa un if donde searchMap() == NULL con la palabra a guardar como clave y el mapa de palabras general para saber si la palabra esta guardada en el mapa de palabras.
+    - Si es igual a NULL, significa que no esta guardado, entoces lo guardara:
+        - Crea una variable tipo struct Palabra con la palabra a guardar usando la funcion createWord().
+        - Crea la lista en Palabra->ConPalabra con createList(), para guardar los libros donde se encuentra la 
+          palabra del mapa.
+        - Usa la funcion createBookConWord() para crear una variable tipo LibrosConPalabras con el titulo e id 
+          del libro donde se puede encontrar la palabra.
+        - Usa pushBack() para guardar la variable tipo LibrosConPalabras en la lista Palabra->ConPalabra.
+        - Usa la funcion insertMap() para insertar en el mapa la variable tipo Palabra que se creo en esta 
+          iteracion.
+    - Si no, significa que la palabra esta guardada, y lo que tenemos que hacer es diferente.
+        - Guarda la variable donde se encuentra la palabra en un auxiliar usando searchMap()
+        - Aumenta las ocurrencias totales de la palabra en 1.
+        - Recorre la lista de libros de la palabra, con un while donde la posicion en la qye estamos debe ser 
+          distinto de NULL.
+            - Usa un if para saber si en esa posicion de la lista el titulo del libro coincide con el titulo   
+              del libro de donde vino la palabra a guardar. 
+                - Si encuentra el libro, entonces aumenta la ocurrencia palabras en ese libro
+                - Usa break para salir del while dejandonos en la posicion del libro en la lista.
+            - Usa nextList() para pasar a la siguiente posicion de la lista y revisar el siguiente libro 
+              guardado.
+        - Usa un if para saber si la ultima posicion por la que pase es NULL.
+            - Si es NULL significa que no encontramos el libro y debemos guardarlo en la lista.
+                - Se usa la funcion createBookConWord() para crear una variable tipo LibrosConPalabras con el 
+                  titulo e id del libro donde se puede encontrar la palabra.
+                - Se inserta la variable tipo LibrosConPalabras creada en la lista de los libros que guarda la 
+                  el libro en la palabra donde estamos con pushBack().
+
+
+A continuacion crea variables auxiliares de los struct Libro y PalabraEnLibro para guardar la palabra el el mapa de palabras
+
+Usa un if donde searchMap() == NULL con el titulo a guardar como clave y el mapa de libros general para saber si el libro esta guardado en el mapa de libros.
+    - Si es igual a NULL, significa que no esta guardado, entoces lo guardara:
+        - Crea una variable tipo struct Libro con el titulo del libro, su id, la palabra a guardar y el path 
+            que se uso para abrir el archivo a guardar usando la funcion createBook().
+        - Crea la lista en Libro->EnLibro con createList(), para guardar las palabras que se encuentran en el 
+          libro.
+        - Usa la funcion createWordEnBook() para crear una variable tipo LibrosConPalabras con la palabra que 
+          se puede encontrar en el libro.
+        - Usa pushBack() para guardar la variable tipo PalabraEnLibro en la lista Libro->EnLibro.
+        - Usa la funcion insertMap() para insertar en el mapa la variable tipo Libro que se creo en esta 
+          iteracion.
+    - Si no, significa que la palabra esta guardada, y lo que tenemos que hacer es diferente.
+        - Guarda la variable donde se encuentra la libro en un auxiliar usando searchMap().
+        - Aumenta la cantidad de caracteres en el libro en la cantidad de caracteres de la palabra a guardar.
+        - Recorre la lista de palabras en el, con un while donde la posicion en la que estamos debe ser 
+          distinto de NULL.
+            - Usa un if para saber si en esa posicion de la lista la palabra coincide la palabra a guardar que 
+              recibio la funcion. 
+                - Si encuentra la palabra, entonces aumenta la ocurrencia de esa palabra en el libro.
+                - Usa un break salir del while dejandonos en la posicion la palabra en la lista.
+            - Usa nextList() para pasar a la siguiente posicion de la lista y revisar la siguiente palabra
+              guardada.
+        - Usa un if para saber si la ultima posicion por la que pase es NULL.
+            - Si es NULL significa que no encontramos el libro y debemos guardarlo en la lista.
+                - Se aumenta la cantidad de palabras en el libro.
+                - Se usa la funcion createWordEnBook() para crear una variable tipo PalabraEnLibro con la     
+                  palabra a guardar.
+                - Se inserta la variable tipo PalabraEnLIbro creada en la lista de las palabras que guarda la 
+                    palabra en el libro donde estamos con pushBack().
 }
 //-----------------------------------------//
 
 /*------- Leer Archivo -------*/
 void ReadTxt(Map* string_map, Map* book_map, char *name, char *nameDirectory, int *docTotal)
 {
+Crea el camino para abrir el archivo con la funcion get_nameFile() y lo guarda en nameFile.
 
+Usa fopen() con nameFile para abrir el archivo y lo abre en modo lectura.
+Hay un if de que si el archivo no se puede abrir termina esta funcion.
+
+Con el exito en abrir el archivo, aumenta el contador de documentos totales "docTotal" en uno-
+
+Crea las variables title para guardar el titulo y un booleano save como false.
+
+Crea la variable char* word y guarda la primera palabra del archivo con nextWord().
+
+Crea un while que no termina mientras word != NULL.
+    - Usa un if para saber si la palabra es "Title:".
+        - Si la palabra es title, significa que el resto de la linea es el titulo del libro, asi que lo guarda 
+          con fgets en la variable title.
+        - Cambia la variable booleana save a true.
+        - Usa nextWord() para guardar la palabra despues del titulo en word.
+    - Si save == true entonces:
+        Usa saveWordsINMaps() para guardar la palabra word y la informacion correspondiente en los mapas.
+    - Usa nextWord() para que word pase a la siguiente palabra y asi recorrer el archivo.
+
+Cierra el archivo.
 }
 
 /*----------------- OPCIÓN 1: -----------------*/
 void CargarDocumento(Map *palabrasMap, Map *librosMap, int *dTotal)
 {
+Recibe los 2 mapas donde se guardaran los datos y una direccion de memoria a un contador de documentos.
+Solicita el nombre de los documentos a cargar, solicitando que terminen en txt.
 
+Crea un contador = 0.
+
+Crea una lista donde estan los nombres de los archivos txt que ingrsaron, los separo por espacio y los guardo en una lista con la funcion cantArchiveOpen().A esta funcion envia la direccion de memoria del contador para que su valor sea la cantidad de archivos a abrir.
+
+Abre el directorio en la variable DIR* carpeta que creo previamente con la funcion opendir().
+
+Usa un while para recorrer el directorio, donde usa readdir(carpeta) y cont > 0 para recorrer el directorio.
+    - Con un if usando la funcion esText() comprueba si debe abrir este archivo o no. De no tener que abrirlo 
+      usa continue para pasar al siguiente archivo.
+    - Si es un archivo a abrir, usa la funcion ReadTxt(), para guardar la informacion que debe guardarse en 
+      los mapas.
+
+Cierra el directorio.
 }
 //-------------------------------------------------------------//
 
@@ -253,14 +352,14 @@ void CargarDocumento(Map *palabrasMap, Map *librosMap, int *dTotal)
 /*------- Mostrar Libro -------*/
 void mostrarLibro(Libro* aux)
 {
-
+Muestra el titulo, la id, la cantidad de palabras y la cantidad de caracteres del libro recibido en pantalla
 }
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 2: -----------------*/
 void MostrarDocumentosOrdenados(Map *allBooks)
 {
-
+Recorre el mapa de libros con un while y usa la funcion mostrarLibro() en cada libro, debido a la estructura del Map.c, los libros estan ordenados alfabeticamente.
 }
 //-------------------------------------------------------------//
 
@@ -343,14 +442,14 @@ Utiliza for para recorrer el arreglo con las 10 palabras con mayor frecuencia de
 /*----------------- OPCIÓN 4: -----------------*/
 void PalabrasConMayotFrecuencia(Map* allBooks)
 {
-    Recibe el mapa con los (libros cargados.
+Recibe el mapa con los (libros cargados.
 
-    Solicita la id del libro.
+Solicita la id del libro.
 
-    Revisa con un if searchMap() si hay un libro con la id ingresada por el usuario.
-        Si no existe, imprime un mensaje explicando la situacion.
+Revisa con un if searchMap() si hay un libro con la id ingresada por el usuario.
+    Si no existe, imprime un mensaje explicando la situacion.
     
-    Si existe, mostraria las 10 palabras mas frecuentes en el libro con la funcion MostrarMasFrecuentes().
+Si existe, mostraria las 10 palabras mas frecuentes en el libro con la funcion MostrarMasFrecuentes().
 }
 //-------------------------------------------------------------//
 
@@ -617,7 +716,7 @@ Crea un while con la condicion 'option != 8'.
 /--------------------------------------------------------------------------------------------------------------/
 
  option =  2:
- 
+ Muestra los libros ordenados alfabeticamente con la funcion MostrarDocumentosOrdenados().
 
 /--------------------------------------------------------------------------------------------------------------/
 
@@ -627,7 +726,7 @@ Crea un while con la condicion 'option != 8'.
 /--------------------------------------------------------------------------------------------------------------/
 
  option =  4:
- 
+ Calcula la frecuencia de las palabras de un libro escogido por el usuario e imprime las 10 palabras mas frecuentes en el libro con la funcion PalabrasConMayotFrecuencia()
  
 /--------------------------------------------------------------------------------------------------------------/
 
