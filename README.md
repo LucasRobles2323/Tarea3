@@ -98,7 +98,7 @@ Función para comparar claves de tipo long retorna 1 si son iguales
 
 long lower_than_long(void * key1, void * key2) 
 {
-Función para comparar claves de tipo int retorna 1 si son key1<key2
+Función para comparar claves de tipo long retorna 1 si son key1<key2
 }
 ~~~
 ---
@@ -201,6 +201,12 @@ Libro *createBook(char *WORD, unsigned long ID, char *TITLE)
 }
 //-----------------------------------------//
 
+/*------- Transforma en minuscula los caracteres alfabeticos -------*/
+void minsuculas(char *cadena){
+
+}
+//-----------------------------------------//
+
 /*------- Guardar en los mapas la informacion -------*/
 void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave, 
                      Map *words_Map, Map *books_Map)
@@ -253,13 +259,38 @@ int compare_strings(char cadena1[101], char *cadena2)
 {
 
 }
+//-----------------------------------------//
 
+/*------- Busca y muestra libro por el titulo -------*/
+void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
+{
+	book = firstMap(booksMap);
+		while(book != NULL)
+		{
+			if(compare_strings(title, book->nameBook) == 0)
+			{	
+				printf("\n");
+				printf("Libro encontrado: \n");
+				printf("\n");
+				mostrarLibro(book);	return;
+
+			}else{book = nextMap(booksMap);}
+		}
+
+		printf("Libro no encontrado\n");
+		return;
+}
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 3: -----------------*/
-void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
+void BuscarLibro(Libro* book, Map* booksMap)
 {
-
+	printf("Ingrese el nombre de los ejemplares que desea buscar \n");
+	char title[1000];
+	scanf("%[0-9a-zA-Z ,-]", title);
+	getchar();
+	BuscarLibroTitulo(book, booksMap, title);
+	return;
 }
 //-------------------------------------------------------------//
 
@@ -270,15 +301,25 @@ void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 //**************************  OPCIÓN 4  ***********************//
 
 /*------- Calcula la frecuencia de cada una -------*/
-void calcularFrecuencia(Libro *onlyBook)
-{
+void calcularFrecuencia(PalabraEnLibro *aux, double cantWords){
+
+}
+//-----------------------------------------//
+
+/*------- Muestra la palabraDelLibro con su frecuencia y ocurrencia -------*/
+void mostrarWordDelLibro(PalabraEnLibro *see, int num){
+
+}
+//-----------------------------------------//
+
+/*------- Crear Arreglo en el orden requerido -------*/
+void MostrarMasRelevantes(Libro *BOOK){
 
 }
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 4: -----------------*/
-void PalabrasConMayotFrecuencia(Map* allBooks)
-{
+void PalabrasConMayotFrecuencia(Map* allBooks){
 
 }
 //-------------------------------------------------------------//
@@ -298,16 +339,13 @@ void PalabrasConMayotFrecuencia(Map* allBooks)
 //**************************  OPCIÓN 6  ***********************//
 
 /*------- Muestra un libro y una id -------*/
-void mostrarLibroConPalabra(LibrosConPalabra *libro)
-{
+void mostrarLibroConPalabra(LibrosConPalabra *libro){
 
 }
-
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 6: -----------------*/
-void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras)
-{
+void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras){
 
 }
 //-------------------------------------------------------------//
