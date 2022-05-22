@@ -371,7 +371,14 @@ Recorre el mapa de libros con un while y usa la funcion mostrarLibro() en cada l
 //**************************  OPCIÓN 3  ***********************//
 
 /*------- Comparar Strings -------*/
-int compare_strings(char cadena1[101], char *cadena2)
+int compare_strings_advanced(char* cadena1, char *cadena2) // cadena 2 avanza, la 1 no
+{
+
+}
+//-----------------------------------------//
+
+/*------- Comparar Palabras -------*/
+int compare_words(char* title, char* titleLibro)
 {
 
 }
