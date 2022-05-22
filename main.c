@@ -481,26 +481,23 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 	/*------- Comparar Strings -------*/
 	int compare_strings_advanced(char* cadena1, char *cadena2) // cadena 2 avanza, la 1 no
 	{
-		size_t largo = strlen(cadena2); 
+		size_t largo = strlen(cadena2);  // largo cadena dinamica
 		size_t letras = 0;
-		while(cadena1[letras] != '\0'){letras++;}
+		while(cadena1[letras] != '\0'){letras++;} // letras de la cadena ingresada por el usuario
 		int j = 0; size_t cont_iguales = 0;
 		
-		minsuculas(cadena1); minsuculas(cadena2);
-		printf("\n cadena 1 = %s\n", cadena1);
-		for(int i = 0; i < largo; i++)
+		minsuculas(cadena1); minsuculas(cadena2); // funciones similares a tolower
+
+		for(int i = 0; i < largo; i++) // for que hace el algrotimo necesario para ver si contienen las palabras
 		{
-			if(cadena2[i] != ' ')
+			if(cadena2[i] != ' ') 
 			{
-				printf("%c / %d == ", cadena1[j], j);
-				printf("%c / %d \n", cadena2[i], i);
 			if (cadena1[j] == cadena2[i])
 			{
-				j++; cont_iguales++; 
+				j++; cont_iguales++;  
 				if(cont_iguales == letras)return 0;
-			}else{j = 0;}
-			}
-			
+			}else{j = 0;} // si no son iguales vuelve al principio
+			}		
 		}
 
 		return 1;	
@@ -508,15 +505,15 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 	//-----------------------------------------//
 	//-----------------------------------------//
 
-	int compare_words(char* title, char* titleLibro)
+	int compare_words(char* title, char* titleLibro) // compara palabra a palabra
 	{
 		size_t cont = 0; 
-		List* words = cantArchiveOpen(strdup(title), &cont, false);
+		List* words = cantArchiveOpen(strdup(title), &cont, false); // función útil para listar una frase
 		char *part_word;
 		part_word = firstList(words);
-		while(part_word != NULL)
-		{	printf("entró\n");
-			if((compare_strings_advanced(part_word, titleLibro) != 0))return 1;
+		while(part_word != NULL) // se recorre la lista
+		{	
+			if((compare_strings_advanced(part_word, titleLibro) != 0))return 1; // una comparación de strings más avanzada
 			part_word = nextList(words);
 		}
 		return 0;
@@ -526,11 +523,11 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 	void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 	{
 		book = firstMap(booksMap); int cont = 0;
-			while(book != NULL)
+			while(book != NULL) // recorre el mapa
 			{
-				if(compare_words(title, book->nameBook) == 0)
+				if(compare_words(title, strdup(book->nameBook)) == 0) // función principal
 				{	
-					if(cont == 0){printf(" \n Libro encontrado: \n");printf("\n"); cont++;}
+					if(cont == 0){printf(" \n Libro encontrado: \n");printf("\n"); cont++;} // contador para mejor estética
 					mostrarLibro(book);	
 					book = nextMap(booksMap);
 
@@ -543,7 +540,7 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 	}
 	//-------------------------------------------------------------//
 
-	void BuscarLibro(Libro* book, Map* booksMap)
+	void BuscarLibro(Libro* book, Map* booksMap) // función que permite el ingreso de datos
 	{
 		printf("Ingrese el nombre de los ejemplares que desea buscar \n");
 			char title[1000];
