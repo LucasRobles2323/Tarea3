@@ -7,6 +7,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <math.h>
 #include "list.h"
 #include "Map.h"
 
@@ -594,33 +595,36 @@ void mostrarLibroConPalabra(LibrosConPalabra *libro)
 	printf("Titulo: %s\n",libro->nombreLibro);
 	printf("ID: %d\n\n", libro->idLibro);
 }
+
+double calcularRelevancia(unsigned long ocurrenciaP,
+	unsigned long palabrasD, int docs, unsigned long librosConP)
+{
+	double ret = (double) ocurrenciaP/palabrasD;
+	ret = ret * (double) log(docs/librosConP);
+
+	return ret;
+}
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 6: -----------------*/
-void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras)
+void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras, int docs)
 {
 	char stringPalabra[101];
-	int imprimidos = 0;
-	double auxRelevancia = 0;
-	Palabra *search;
-	LibrosConPalabra *libro;
-	Libro auxLibro;
+	Palabra *palabra;
+	LibrosConPalabra **arrLibros;
+	int i;
 
 	printf("Ingrese la palabra a buscar: ");
 	scanf("%[0-9a-zA-Z ,-]", stringPalabra);
 	getchar();
 
-	search = (Palabra *) searchMap(mapaPalabras, stringPalabra);
+	palabra = (Palabra *) searchMap(mapaPalabras, stringPalabra);
 
-	printf("\nLibros con la palabra %s: \n\n", search->palabra);
-	libro = (LibrosConPalabra *) firstList(search->ConPalabra);
+	arrLibros = (LibrosConPalabra **) malloc(palabra->LibrosWithPalabra * sizeof(LibrosConPalabra *));
 
-	while(imprimidos < search->LibrosWithPalabra)
-	{
-		auxLibro = (Libro *) searchMap(mapaLibros, libro->nombreLibro);
-		mostrarLibroConPalabra(libro);
-		libro = (LibrosConPalabra *) nextList(search->ConPalabra);
-	}
+	printf("\nLibros con la palabra %s: \n\n", palabra->palabra);
+
+	
 }
 //-------------------------------------------------------------//
 
@@ -699,7 +703,7 @@ int main() {
 			//-----------------------------------------//
 		case 6:
 			/*------- Buscar por palabra -------*/
-			buscarPorPalabra(librosGeneral, palabrasGeneral);
+			buscarPorPalabra(librosGeneral, palabrasGeneral, documentosTotales);
 			break;
 			//-----------------------------------------//
 		case 7:
