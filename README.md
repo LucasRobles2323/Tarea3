@@ -19,7 +19,7 @@ Estudiantes PUCV curso: ICI2240-1  ESTRUCTURA DE DATOS
 - ### Sebastián Aguilera: 
     Pts premio/castigo: 0.
 
-    Creo que debería organizar mejor mi manera de trabajar ya que tarde bastante en hacer las funciones que se me designaron debido a que no tenia un planeado bien como hacerlo.
+    Creo que tuve problemas planificando la forma en la que realizaria las diferentes funciones del programa lo cual perjudicó mi eficiencia en el trabajo. Debería planificar bien qué es lo que voy a hacer antes de ponerme a escribir código.
 
 - ### Gerard Espinoza: 
     Pts premio/castigo: 0.
@@ -465,6 +465,8 @@ double calcularRelevancia(unsigned long ocurrenciaP,
 	unsigned long palabrasD, int docs, unsigned long librosConP)
 {
 
+La funcion recibe 4 valores que se usarán para calcular la relevancia de la palabra con la fórmula correspondiente.
+
 }
 //-----------------------------------------//
 
@@ -472,12 +474,29 @@ double calcularRelevancia(unsigned long ocurrenciaP,
 int cmpfunc (const void *a,const void *b)
 {
 
+Esta función será pasada como argumento en la funcion qsort().
+
+Recibe los parametros a y b que son punteros en un arreglo de punteros.
+
+Se desreferencian a y b y se guardan en variables auxiliares para facilitar su manejo.
+
+Finalmente se calcula ret y se retorna multiplicado por 100 debido a que la funcion debe retornar un entero.
+
 }
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 6: -----------------*/
 void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras, int docs)
 {
+
+La funcion pide al usuario que ingrese una palabra para realizar una búsqueda.
+
+Se llena un array con los libros que contienen la palabra en cuestión y se calcula la relevancia
+de la palabra en cada libro.
+
+Se ordenan los libros en el array de acuerdo a la relevancia de la palabra.
+
+Finalmente se muestran por pantalla los resultados de la búsqueda.
 
 }
 //-------------------------------------------------------------//
@@ -634,6 +653,9 @@ Crea un while con la condicion 'option != 8'.
 
  option =  6:
  
+ Solicita al usuario que ingrese una palabra, se buscan los libros que contienen dicha palabra y luego
+ se muestran por pantalla. Los libros se muestran en orden respecto a la relevancia de la palabra que se busca
+ en el libro, de mayor a menor.
  
 /--------------------------------------------------------------------------------------------------------------/
 
