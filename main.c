@@ -919,7 +919,7 @@ int cmpfunc (const void *a,const void *b)
 	LibrosConPalabra *aux1 = *(LibrosConPalabra **) a;
 	LibrosConPalabra *aux2 = *(LibrosConPalabra **) b;
 
-	double ret = aux1->relevancia - aux2->relevancia;
+	double ret = aux2->relevancia - aux1->relevancia;
 	return (int) (ret * 100); //Ya que la func retorna un int se multiplica ret por 100 y se hace el casting
 }
 //-----------------------------------------//
@@ -958,7 +958,7 @@ void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras, int docs)
 
 	for(int j = 0; j < i; j++)
 	{
-		printf("Titulo: %s \nID: %d\n\n", arrLibros[j]->nombreLibro, arrLibros[j]->idLibro);
+		printf("Titulo: %s \nID: %d\n\n", arrLibros[j]->nombreLibro, arrLibros[j]->idLibro, arrLibros[j]->relevancia);
 	}
 }
 //-------------------------------------------------------------//
