@@ -344,14 +344,15 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 //-----------------------------------------//
 
 /*------- Leer Archivo -------*/
-void ReadTxt(Map* string_map, Map* book_map, char *name, char *nameDirectory){
+void ReadTxt(Map* string_map, Map* book_map, char *name, char *nameDirectory, int *docTotal){
 	// Abre un archivo especifico y guarda sus datos
 	char *nameFile = get_nameFile(name, nameDirectory);
 	
     FILE *F = fopen(nameFile, "r"); // Abre el archivo con el nombre recibido en modo lectura
     
 	if (!F){return;}// Si no existe el archivo, cierra el programa
-	
+	(*docTotal)++;
+
     char *title;
 	bool save = false;
 	char *word = nextWord(F); // Cadena de caracter para guardar cada palabra del archivo
@@ -373,7 +374,7 @@ void ReadTxt(Map* string_map, Map* book_map, char *name, char *nameDirectory){
 }
 
 /*----------------- OPCIÓN 1: -----------------*/
-void CargarDocumento(Map *palabrasMap, Map *librosMap){
+void CargarDocumento(Map *palabrasMap, Map *librosMap, int *dTotal){
     DIR *carpeta;
 	struct dirent *dirp;
 	char *ubicacion = "./Libros";
@@ -387,7 +388,7 @@ void CargarDocumento(Map *palabrasMap, Map *librosMap){
     carpeta = opendir(ubicacion);
 	while ((dirp = readdir(carpeta)) != NULL && cant > 0){
         if(esText(dirp->d_name, FilesToOpen, &cant) == 0) continue;
-		ReadTxt(palabrasMap, librosMap, dirp->d_name, ubicacion);
+		ReadTxt(palabrasMap, librosMap, dirp->d_name, ubicacion, dTotal);
 	}
 	closedir(carpeta);
 }
@@ -654,6 +655,7 @@ int main() {
     setSortFunction(librosGeneral,lower_than_string);
 
 	int option = 0; //Variable que decide la opcion del menun seleccionada
+	int documentosTotales = 0;
 
 	Advertencia();
 	pressEnter(0);
@@ -672,7 +674,8 @@ int main() {
 		switch (option){// Entra a la opcion seleccionada para llevarla a cabo
 		case 1:
             /*------- Cargar documentos -------*/
-			CargarDocumento(palabrasGeneral, librosGeneral);
+			CargarDocumento(palabrasGeneral, librosGeneral, &documentosTotales);
+			printf("\n doc total = %d\n", documentosTotales);
 			break;
             //-----------------------------------------//
         case 2:
