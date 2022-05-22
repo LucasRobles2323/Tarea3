@@ -501,7 +501,7 @@ int compare_strings_advanced(char* cadena1, char *cadena2) // cadena 2 avanza, l
 				j++; cont_iguales++;  
 				if(cont_iguales == letras)return 0;
 			}
-			else{j = 0;} // si no son iguales vuelve al principio
+			else{j = 0; cont_iguales = 0;} // si no son iguales vuelve al principio
 		}
 	}
 	return 1;	
@@ -533,7 +533,7 @@ void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 	{
 		if(compare_words(title, strdup(book->nameBook)) == 0) // función principal
 		{	
-			if(cont == 0){printf(" \n Libro encontrado: \n");printf("\n"); cont++;} // contador para mejor estética
+			if(cont == 0){printf(" \n Libro/s encontrado/s: \n");printf("\n"); cont++;} // contador para mejor estética
 			mostrarLibro(book);	
 			book = nextMap(booksMap);
 		}
@@ -541,7 +541,7 @@ void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 	}
 	if(cont > 0){printf("Fin libros encontrados");}
 	if(cont == 0)
-	{printf("\nLibro no encontrado");}
+	{printf("\nNingún libro coincide con lo especificado");}
 	return;
 }
 //-----------------------------------------//
