@@ -375,10 +375,12 @@ int compare_strings_advanced(char* cadena1, char *cadena2) // cadena 2 avanza, l
 {
 	Una versión más compleja y precisa a la hora de comparar strings:
 	- se tiene una frase ingresada por el usuario y otra que es de manera intrínseca el título de un libro
-	- compara palabra -> título (carácter_palabra = carácter título), si son varias palabras ingresadas por el usuario el proceso se repite varias veces según se 		avance en la función compare_words().
+	- compara palabra -> título (carácter_palabra = carácter título), si son varias palabras ingresadas por el usuario 
+	el proceso se repite varias veces según se avance en la función compare_words().
 	- siempre y cuando se cumpla que son iguales el algoritmo sigue su curso hasta finalizar el proceso, es decir, todos los carácteres de la palabra ingresada
 	por el usuario se encuentran contenidos DE MANERA SUCESIVA en el título, por ende, el libro asociado al mismo es mostrado
-	- en caso de darse una discrepancia (no son iguales) la cantidad de similitudes se reinicia a 0 y la palabra ingresada por el usuario empieza desde primer 	carácter, si se recorre todo el título sin resultados, el libro no se muestra.
+	- en caso de darse una discrepancia (no son iguales) la cantidad de similitudes se reinicia a 0 
+	y la palabra ingresada por el usuario empieza desde primer carácter, si se recorre todo el título sin resultados, el libro no se muestra.
 	Como nota: para que se muestre, la función debe retornar 0, si retorna 1 el libro no se muestra.
 
 }
@@ -387,14 +389,19 @@ int compare_strings_advanced(char* cadena1, char *cadena2) // cadena 2 avanza, l
 /*------- Comparar Palabras -------*/
 int compare_words(char* title, char* titleLibro)
 {
-	función que permite acceder y complementa a compare_strings_advanced() , a través de la función cantArchiveOpen() se obtiene una lista con todas las palabras contenidas dentro de la frase que el usaurio ingresó (sin importar que solo sea una palabra o letra). Luego se recorre la lista creada y se comprueba si dichas palabras cada una por separado están contenidas en el título del libro correspodiente. Retorna 0 si se cumple, retorna 1 si dicha condición es incorrecta.
+	función que permite acceder y complementa a compare_strings_advanced() , a través de la función cantArchiveOpen() se obtiene una lista con todas las palabras 
+	contenidas dentro de la frase que el usaurio ingresó (sin importar que solo sea una palabra o letra). Luego se recorre la lista creada y se comprueba si dichas 
+	palabras cada una por separado están contenidas en el título del libro correspodiente. Retorna 0 si se cumple, retorna 1 si dicha condición es incorrecta.
 }
 //-----------------------------------------//
 
 /*------- Busca y muestra libro por el titulo -------*/
 void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 {		
-	inicializa el mapa en donde están contenidos los libros, luego procede a recorrer el mapa pasando por todos los libros cargados. en cada iteración se entra a 	la función compare_words() donde ingresa la string ingresada por el usuario, si esta retorna 0, el libro presente en la posición del mapa actual se imprime junto con todos sus datos asociados gracias a la función mostrarLibro(), si no se imprimió ningún libro, se notiifca al usuario.
+	inicializa el mapa en donde están contenidos los libros, luego procede a recorrer el mapa pasando por todos
+	los libros cargados. en cada iteración se entra a la función compare_words() donde ingresa la string ingresada por el usuario, 
+	si esta retorna 0, el libro presente en la posición del mapa actual se imprime junto con todos sus datos asociados gracias a la función mostrarLibro(),
+	si no se imprimió ningún libro, se notiifca al usuario.
 	
 }
 //-----------------------------------------//
@@ -402,7 +409,8 @@ void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
 /*----------------- OPCIÓN 3: -----------------*/
 void BuscarLibro(Libro* book, Map* booksMap)
 {
-	Función que permite al usuario ingresar el título que desea buscar en el mapa de libros, luego de ingresada, la string ingresa a la función 		BuscarLibroTitulo().
+        Función que permite al usuario ingresar el título que desea buscar en el mapa de libros, luego de ingresada, la string ingresa a la función 
+	BuscarLibroTitulo().
 
 }
 //-------------------------------------------------------------//
