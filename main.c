@@ -43,15 +43,15 @@ typedef struct {
 }Libro; //Struct que guarda los datos de un libro para el mapa de libro
 
 typedef struct{
-	List *palabra;
+	List *palabra;//aqui se guardan todas las palabras con la misma relevancia
 	float relevancia;
-}PalabraRelevante;
+}PalabraRelevante;//struct que guarda la  relevancia y una lista de palabras
 
 typedef struct{
 	Map *PalabraRelevante; 
 	char *titulo;
 	int numeroDocumentos;
-}Relevancia;
+}Relevancia;//struct que guarda total de documentos, el titulo del libro y un mapa de key "relevancia"
 
 //------------------FUNCIONES-------------------------//
 
@@ -646,18 +646,22 @@ PalabraRelevante *crearpalabra (float relevancia){
 float calcularRel (unsigned long libroConPalabra, unsigned long cantPalabrasLibro, int contador, float ocurrenciasString){
 	float logaritmo, division;
     
+	//Se calcula el valor del logaritmo en base 10 de (cantidad de documentos/documentos con la palabra)
 	logaritmo = log10 (contador/libroConPalabra);
+	//Se calcula el valor de la division entre (cantidad de veces que aparece la palabra/cantidad de palabras que tiene el libro)
 	division = ocurrenciasString/cantPalabrasLibro;
-
+    
+	//Retorna la multiplicacion entre logaritmo * division
 	return (division * logaritmo);
 }
 //-----------------------------------------//
 
 /*------- Borra completamente un mapa -------*/
 void borrarMapa (Map *mapaErase){
+	//Se repasa desde el primer libro hasta el ultimo
 	Relevancia *borrarRelevancia = firstMap (mapaErase);
 	while (borrarRelevancia != NULL){
-		eraseMap (mapaErase, borrarRelevancia->titulo);
+		eraseMap (mapaErase, borrarRelevancia->titulo);//Aqui se borra el mapa de key libro
 		borrarRelevancia = nextMap (mapaErase);
 		if (borrarRelevancia == NULL)break;
 	}
@@ -666,40 +670,69 @@ void borrarMapa (Map *mapaErase){
 //-----------------------------------------//
 
 /*------- Calcula y guarda la relevancia de todas las palabras del libro -------*/
+/*Aqui se se crea el mapa para la relevancia esta es:
+                   
+				 Dentro del Map (titulo del libro):  
+					int cantidad de documentos 
+					char *titulo del libro      
+					Map *(relevancia):
+
+					 Dentro del Map (relevancia):       
+                        float relevancia  
+					    list *palabra:
+
+						Dentro de la lista palabra:  
+						       char *palabra
+*/
 void relevanciaCreate (Map *relevancia_map, Map *libros_map, Map *palabras_map){
+	//Se revisa si es que el mapa libros tiene contenido dentro en caso de ser NULL se devuelve
 	if ((firstMap (libros_map)) == NULL || libros_map == NULL){
 		printf ("No se ha cargado ningun archivo\n");
 		return;
 	}
     
+	//Se declara variables
+	//Para los struct
 	PalabraRelevante *pal;
-	Relevancia *rel; 
-	float relevante;
-    int cont = 0;
+	Relevancia *rel;
+
+	float relevante;//relevancia
+    int cont = 0;//contador de documentos
+	//Aqui se recorre el mapa de libros para saber cuantos libros se cargaron
 	Libro *book = firstMap (libros_map);
 	while (book != NULL){
 		cont ++;
 		book = nextMap (libros_map);
 	}
-
+    
+	//Si el contador es 1 se muestra un mensaje por pantalla
+	//Esto es porque si hay solo 1 documento cuando se calcule la relevancia todas daran 0 por el log(1) = 0
 	if (cont == 1){
 		printf ("Si se cargo 1 solo documento todas las palabras tienen relevancia 0\n");
 		return;
 	}
-
+    
+	//Si el mapa de relevancia esta vacio se crea una nueva
 	if (relevancia_map == NULL || (firstMap (relevancia_map)) == NULL){
+		//Se inicialista en el primer libro
 		Libro *book = firstMap (libros_map);
+		//Se toma el primer struct de la lista del book->EnLibro
 		PalabraEnLibro *wordInBook = firstList (book->EnLibro);
+		//Se busca la misma el stuct correspondiente a la palabra de la firstList (book->EnLibro)
 		Palabra *string = searchMap (palabras_map, wordInBook->String);
-
+        
+		//Mientras la varaible book sea distinto de NULL que representa los libros
 		while (book != NULL){
+			//Se crea el struct de tipo Relevancia y se inserta al Mapa con key "titulo del libro" y valor la struct Relevancia
 			rel = crearLibro (book->nameBook, cont);
 			insertMap (relevancia_map, rel->titulo, rel);
+			//Mientras wordInBook sea distinto de NULL que representa las palabras dentro del libro
 			while (wordInBook != NULL){
+				//Se calcula la relevancia
 				relevante = calcularRel (string->LibrosWithPalabra, book->cantPalabrasBook, cont, wordInBook->ocurrenciaString);
-
+                //Se verifica si en el mapa(titulo)->mapa(relevancia) existe ya un mapa con la misma relevancia
 				PalabraRelevante *verificar = searchMap (rel->PalabraRelevante, &relevante);
-				
+				//Si no existe se crea inserta al mapa con la relevancia no repetida
 				if (verificar == NULL){
 					
 					pal = crearpalabra (relevante);
@@ -709,24 +742,32 @@ void relevanciaCreate (Map *relevancia_map, Map *libros_map, Map *palabras_map){
 					
 				}
 				else{
+					//Si se repite se añade a la lista de palabras con la misma relevancia
 					pushBack (verificar->palabra, wordInBook->String);
 				}
-
+                
+				//Se va la siguiente palabra pero si wordInBook da NULL se salta este while
 				wordInBook = nextList (book->EnLibro);
 				if (wordInBook == NULL)continue;
 				string = searchMap (palabras_map, wordInBook->String);	
 			}
+			//Se  va al siguiente libro pero si book da NULL se sale del ciclo
 			book = nextMap (libros_map);
 			if (book == NULL) break;
+			//Se ve la primera palabra del libro
 			wordInBook = firstList (book->EnLibro);
 			string = searchMap (palabras_map, wordInBook->String);
 		}
 	}else{
+		//Se compara si coincide la cantidad de documentos antes y despues de ocupar esta funcion
 		Relevancia *comparador = firstMap (relevancia_map);
+		//En caso de que se hayan añadido mas documentos habra que recalcular la relevancia
 	    if (cont > comparador->numeroDocumentos){
-
+            //Se borra el mapa hecho
             borrarMapa (relevancia_map);
-        
+            
+			//Se hace el mismo procedimiento que cuando el mapa era NULL
+			//De aqui en adelante es lo mismo.
 		    Libro *book = firstMap (libros_map);
 		    PalabraEnLibro *wordInBook = firstList (book->EnLibro);
 		    Palabra *string = searchMap (palabras_map, wordInBook->String);
@@ -759,37 +800,44 @@ void relevanciaCreate (Map *relevancia_map, Map *libros_map, Map *palabras_map){
 			    wordInBook = firstList (book->EnLibro);
 			    string = searchMap (palabras_map, wordInBook->String);
 	        }
+			//Hasta aqui se repite
 	    }
     }
-}
+}	
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 5: -----------------*/
+//Aqui se pregunta el libro y se muestra por pantalla las palabras relevantes
 void mostrarRelevancia (Map * mapa){
+	//Por si paso algo el mapa no se cargo bien o algo, deberia ser raro ver este printf
 	Relevancia *estructura = firstMap (mapa);
 	if (estructura == NULL){
 		printf ("Algo paso\n");
 		return;
 	}
     
+	//Se muestra los libros disponibles 
 	printf ("Titulos a mostar:\n");
 	while (estructura != NULL){
 		printf ("%s\n", estructura->titulo);
 		estructura = nextMap (mapa);
 	}
     printf ("\n");
-
+    
+	//Se pregunta al usuario que libro quiere ver las palabras relevantes
     char titulo[101];
 	printf ("Escriba el libro \n");
 	scanf("%[0-9a-zA-Z ,-]", titulo);
 	getchar();
 
+    //Se busca y en caso de no encontrarlo dira que no se encuentra
 	estructura = searchMap (mapa, titulo);
 	if (estructura == NULL){
 		printf ("No esta el libro buscado o no lo escribio bien\n");
 		return;
 	}
-
+    
+	//Aqui se muestra las 10 palabras relevantes
     int cont = 0;
 	PalabraRelevante *word = firstMap (estructura->PalabraRelevante);
 	char *lista = firstList (word->palabra);
