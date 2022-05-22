@@ -612,17 +612,6 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 
 //**************************  OPCIÓN 6  ***********************//
 
-/*------- Muestra un libro y una id -------*/
-<<<<<<< HEAD
-=======
-void mostrarLibroConPalabra(LibrosConPalabra *libro)
-{
-	printf("Titulo: %s\n",libro->nombreLibro);
-	printf("ID: %d\n\n", libro->idLibro);
-}
-//-----------------------------------------//
->>>>>>> 7f1cac7bc58cb6fa8ee0a09bfac7ac05aa622256
-
 /*------- Calcula Relevancia -------*/
 double calcularRelevancia(unsigned long ocurrenciaP,
 	unsigned long palabrasD, int docs, unsigned long librosConP)
