@@ -487,16 +487,17 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 		int j = 0; size_t cont_iguales = 0;
 		
 		minsuculas(cadena1); minsuculas(cadena2);
-
+		printf("\n cadena 1 = %s\n", cadena1);
 		for(int i = 0; i < largo; i++)
 		{
 			if(cadena2[i] != ' ')
 			{
+				printf("%c / %d == ", cadena1[j], j);
+				printf("%c / %d \n", cadena2[i], i);
 			if (cadena1[j] == cadena2[i])
 			{
 				j++; cont_iguales++; 
 				if(cont_iguales == letras)return 0;
-				
 			}else{j = 0;}
 			}
 			
@@ -505,20 +506,18 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 		return 1;	
 	}
 	//-----------------------------------------//
-		
-
-
 	//-----------------------------------------//
 
-	int compare_words(char* title, char* titleLibro, Libro* book)
+	int compare_words(char* title, char* titleLibro)
 	{
-		size_t cont = 0;
-		List* words = cantArchiveOpen(title, &cont, false);
-		title = firstList(words);
-		while(title != NULL)
-		{	
-			if((compare_strings_advanced(title, titleLibro) != 0))return 1;
-			title = nextList(words);
+		size_t cont = 0; 
+		List* words = cantArchiveOpen(strdup(title), &cont, false);
+		char *part_word;
+		part_word = firstList(words);
+		while(part_word != NULL)
+		{	printf("entró\n");
+			if((compare_strings_advanced(part_word, titleLibro) != 0))return 1;
+			part_word = nextList(words);
 		}
 		return 0;
 	}
@@ -529,7 +528,7 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 		book = firstMap(booksMap); int cont = 0;
 			while(book != NULL)
 			{
-				if(compare_words(title, book->nameBook, book) == 0)
+				if(compare_words(title, book->nameBook) == 0)
 				{	
 					if(cont == 0){printf(" \n Libro encontrado: \n");printf("\n"); cont++;}
 					mostrarLibro(book);	
@@ -556,7 +555,6 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 
 
 	//**************************************************************//
-
 
 
 //**************************  OPCIÓN 4  ***********************//
