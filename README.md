@@ -561,16 +561,23 @@ Crea un while con la condicion 'option != 8'.
 /--------------------------------------------------------------------------------------------------------------/
 
  option =  5:
+ 
  La primera funcion calcula la relevancia y esta tiene 5 opciones:
+ 
  1.Si el mapa no fue creado se crea una y se calcula la relevancia.
+ 
  2.Si se añaden nuevos documentos y el mapa ya fue creado, se borra el mapa y se crea uno nuevo con los nuevos datos.
+ 
  3.Si el mapa de libros no existe devuelve un mensaje diciendo que no se ha cargado documentos.
+ 
  4.Si la cantidad de documentos es igual a 1 se dice al usuario que todas las palabras tendran relevancia 0.
+ 
  5.Si el mapa existe y no se han cargado nuevos documentos no se hara nada.
  
  La segunda funcion pregunta al usuario sobre que libro quiere saber las palabras relevantes
  una vez escrito si existe se muestra por pantalla las 10 palabras mas relevantes
  si no existe se le dice al usuario que no escribio bien .
+ 
 /--------------------------------------------------------------------------------------------------------------/
 
  option =  6:
@@ -585,7 +592,9 @@ Crea un while con la condicion 'option != 8'.
 /--------------------------------------------------------------------------------------------------------------/
 
  option =  8:
+ 
  exit.
+ 
 /--------------------------------------------------------------------------------------------------------------/
 
  default:
