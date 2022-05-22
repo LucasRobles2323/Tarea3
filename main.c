@@ -346,14 +346,14 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 		while (auxWord2)// Revisa si el libro esta en la lista de libros donde se encuentra la palabra
 		{
 			if (is_equal_string(titleToSave, auxWord2->nombreLibro) == 1)
-			{
+			{// Se aumenta la ocurrencia en el libro si se encuentra la palabra
 				auxWord2->ocurrenciaEnLibro++;
-				break;
+				break; // Se usa break para mantener distinto de null a auxWord2.
 			}
 			auxWord2 = nextList(auxWord->ConPalabra);
 		}
 		if (!auxWord2)
-		{
+		{// Si no estaba se crea la variable y se guarda en la lista
 			auxWord2 = createBookConWord(atoi(idToSave), titleToSave);
 			pushBack(auxWord->ConPalabra, auxWord2);
 		}
@@ -378,13 +378,14 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 		{
 			if (is_equal_string(auxBook2->String, wordToSave))
 			{
+				// Si la palabra esta, entonces se aumenta su ocurrencia
 				auxBook2->ocurrenciaString++;
 				break;
 			}
 			auxBook2 = nextList(auxBook->EnLibro);
 		}
 		if (!auxBook2)
-		{
+		{// Si no estaba se crea la variable y se guarda en la lista
 			auxBook->cantPalabrasBook++;
 			auxBook2 = createWordEnBook(wordToSave);
 			pushBack(auxBook->EnLibro, auxBook2);
@@ -404,10 +405,10 @@ void ReadTxt(Map* string_map, Map* book_map, char *name, char *nameDirectory, in
 	(*docTotal)++;
 
     char *title;
-	bool save = false;
+	bool save = false; //usado para saber si guardar o no las palabras
 	char *word = nextWord(F); // Cadena de caracter para guardar cada palabra del archivo
     while (word != NULL)
-    {
+    {// Guarda las palabras a partir de la linea posterior al titulo
 		
 		if (is_equal_string(word, "Title:")){ // Guarda el Titulo
 			title = get_title(F);
@@ -433,11 +434,17 @@ void CargarDocumento(Map *palabrasMap, Map *librosMap, int *dTotal){
 	char Archives[200];
 	fgets(Archives,200,stdin);
 	printf("\n");
-    size_t cant = 0;
-	List *FilesToOpen = cantArchiveOpen(Archives, &cant,true);
-    carpeta = opendir(ubicacion);
+
+    size_t cant = 0; // Contador para saber cuantos .txt nos ingreso el usuario
+	// Separa los id.txt ingresados por el usuario en una lista
+	List *FilesToOpen = cantArchiveOpen(Archives, &cant,true); 
+    
+	carpeta = opendir(ubicacion);
 	while ((dirp = readdir(carpeta)) != NULL && cant > 0){
-        if(esText(dirp->d_name, FilesToOpen, &cant) == 0) continue;
+		// Revisa si el archivo del directorio en el que estamos es alguno de los que tenemos que abrir
+        if(esText(dirp->d_name, FilesToOpen, &cant) == 0) continue; 
+
+		// Abre el archivo y guarda la informacion necesaria en los mapas
 		ReadTxt(palabrasMap, librosMap, dirp->d_name, ubicacion, dTotal);
 	}
 	closedir(carpeta);
@@ -461,10 +468,10 @@ void mostrarLibro(Libro* aux){
 
 /*----------------- OPCIÓN 2: -----------------*/
 void MostrarDocumentosOrdenados(Map *allBooks){
-	printf("A continuacion se mostraran los libros ordenados con sus id \n\n");
+	printf("A continuacion se mostraran los libros ordenados alfabeticamente con sus id \n\n");
 	Libro *imprimir = firstMap(allBooks);
 	while (imprimir != NULL)
-	{
+	{// Recorre el mapa de todos los libros
 		mostrarLibro(imprimir);
 		imprimir = nextMap(allBooks);
 	}
@@ -597,17 +604,21 @@ void mostrarWordDelLibro(PalabraEnLibro *see, int num){
 /*------- Crear Arreglo en el orden requerido -------*/
 void MostrarMasFrecuentes(Libro *BOOK){
 	PalabraEnLibro **array = (PalabraEnLibro**) calloc(11, sizeof(PalabraEnLibro*));
-	PalabraEnLibro *aux = firstList(BOOK->EnLibro);
+	
 	int ocupados = 0; //Es para saber si ya se ha ocupado todo el arreglo para que el nuevo dato se ordene
+	
+	PalabraEnLibro *aux = firstList(BOOK->EnLibro);
 	while (aux)
-	{
+	{// Recorre el mapa de palabras presentes en el libro
 		calcularFrecuencia(aux, BOOK->cantPalabrasBook);
 
-		if (ocupados < 10){
+		if (ocupados < 10){ 
+			// Llena las 10 primeras posiciones del arreglo
 			array[ocupados] = aux;
 			ocupados++;
 		}
-		else{
+		else
+		{// Guarda en la onceava posicion del arreglo y lo reordena de mayor a menor
 			array[10] = aux;
 			qsort(array, 10, sizeof(LibrosConPalabra*), compararFrecuencia);
 		}
@@ -615,9 +626,9 @@ void MostrarMasFrecuentes(Libro *BOOK){
 		aux = nextList(BOOK->EnLibro);
 	}
 
-	printf("\nLas palabras mas relevantes en el libro \"%s\" son:\n", BOOK->nameBook);
+	printf("\nLas palabras mas frecuentes en el libro \"%s\" son:\n", BOOK->nameBook);
 	for (size_t i = 0; i < 10; i++)
-	{
+	{// Muestra las diez palabras mas frecuentes del libro
 		mostrarWordDelLibro(array[i], i+1);
 	}
 }
@@ -626,20 +637,18 @@ void MostrarMasFrecuentes(Libro *BOOK){
 /*----------------- OPCIÓN 4: -----------------*/
 void PalabrasConMayotFrecuencia(Map* allBooks){
 	int id;
-	printf("Ingrese el id de un libro: ");
+	printf("Ingrese el id de un solo libro: ");
 	fscanf(stdin, "%d", &id);
 	getchar();
 
 	Libro *aux = firstMap(allBooks);
 	while (aux != NULL)
-	{
-		if (aux->idBook == id)
-		{
-			break;
-		}
+	{ // Recorre los libros hasta encontrar uno con la misma id que ingreso el usuario.
+		if (aux->idBook == id){break;}
 		aux = nextMap(allBooks);
 	}
-	if (aux == NULL){
+
+	if (aux == NULL){ // Si no encuentra el libro con la id ingresada, entrara aqui
 		printf("El libro no existe o no ha sido cargado");
 		return;
 	}
@@ -973,15 +982,16 @@ bool MostrarLinea(char *line, char *worD){
 	List *lineList = cantArchiveOpen(line, &cant, true);
 	char *WordOfLine = firstList(lineList);
 	while (WordOfLine)
-	{
+	{// Busca la palabra en la linea
 		quitarNoAlfabeticos(WordOfLine, true);
 		minsuculas(WordOfLine);
 		if (strcmp(WordOfLine, worD) == 0)
-		{
+		{// Si encuentra la palabra devuelve true
 			return true;
 		}
 		WordOfLine = nextList(lineList);
 	}
+	// Llega aqui si no encontro la palabra en la linea
 	return false;
 }
 //-----------------------------------------//
@@ -1002,17 +1012,21 @@ void AbrirTxt(Map* string_map, Map* book_map, char *titulo, char *path){
 	printf("(Si escribe dos palabras separadas por espacio solo bucara la primear)\n");
 	fgets(wordsInput, 200, stdin);
 	printf("\n\n");
-	List* wordsList = cantArchiveOpen(wordsInput, &cont, true);
+	
+	List* wordsList = cantArchiveOpen(wordsInput, &cont, true); 
+	// Usa esto para que si ingresan mas de una palabra, quedarse con solo una.
 	char *wordToSearch = firstList(wordsList);
+	
+	// Pone a la palabra en el formato que estara en el mapa
 	quitarNoAlfabeticos(wordToSearch, true);
 	minsuculas(wordToSearch);
 	cont = 0;
-	
 	
 	while (fgets(linea, 1023, F) != NULL) { 
         // Recorre el archivo leyendo linea por linea
 
 		if(MostrarLinea(strdup(linea), wordToSearch)){
+			//Si la palabra estaba en la linea, mostrara la linea de su contexto
 			if (cont == 0){
 				printf("En el libro \"%s\", podemos encontrar la palabra ", titulo);
 				printf("\"%s\" en los siguientes contexto:\n", wordToSearch);
@@ -1022,7 +1036,7 @@ void AbrirTxt(Map* string_map, Map* book_map, char *titulo, char *path){
 		}
 	}
 	if (cont == 0)
-	{
+	{// Si no encontro la palabra en el texto, enviara este mensaje
 		printf("La palabra \"%s\" no esta presente en el texto \"%s\"", wordToSearch, titulo);
 	}
 
@@ -1033,9 +1047,9 @@ void AbrirTxt(Map* string_map, Map* book_map, char *titulo, char *path){
 /*------- Conseguir el .txt para abrir el libro -------*/
 void BuscarIdLibro(Map *book_actual, Map *word_actual,  char *title){
 	Libro *aux;
-	title = strtok(title, "\n");
+	title = strtok(title, "\n"); //Quita el \n del titulo
 	if ((aux =searchMap(book_actual, title)) == NULL)
-	{
+	{// Busca el libro en el mapa de los libros para saber si ya fue cargado
 		printf("El libro que desea abrir no esta cargado desde el direcorio\n");
 		return;
 	}
