@@ -7,7 +7,6 @@
 #include <math.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <math.h>
 #include "list.h"
 #include "Map.h"
 
@@ -605,6 +604,15 @@ double calcularRelevancia(unsigned long ocurrenciaP,
 
 	return ret;
 }
+
+int cmpfunc (const void *a,const void *b)
+{
+	LibrosConPalabra *aux1 = *(LibrosConPalabra **) a;
+	LibrosConPalabra *aux2 = *(LibrosConPalabra **) b;
+
+	double ret = aux1->relevancia - aux2->relevancia;
+	return (int) (ret * 100);
+}
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 6: -----------------*/
@@ -612,20 +620,36 @@ void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras, int docs)
 {
 	char stringPalabra[101];
 	Palabra *palabra;
-	LibrosConPalabra **arrLibros;
-	int i;
+	LibrosConPalabra **arrLibros, *libroPalabra;
+	Libro *libro;
+	int i = 0;
 
 	printf("Ingrese la palabra a buscar: ");
 	scanf("%[0-9a-zA-Z ,-]", stringPalabra);
 	getchar();
 
+
 	palabra = (Palabra *) searchMap(mapaPalabras, stringPalabra);
-
 	arrLibros = (LibrosConPalabra **) malloc(palabra->LibrosWithPalabra * sizeof(LibrosConPalabra *));
+	libroPalabra = (LibrosConPalabra *) firstList(palabra->ConPalabra);
 
-	printf("\nLibros con la palabra %s: \n\n", palabra->palabra);
+	while(libroPalabra)
+	{
+		libro = (Libro *) searchMap(mapaLibros, libroPalabra->nombreLibro);
+		libroPalabra->relevancia = calcularRelevancia(libroPalabra->ocurrenciaEnLibro, libro->cantPalabrasBook, docs, palabra->LibrosWithPalabra);
+		arrLibros[i] = libroPalabra;
+		libroPalabra = nextList(palabra->ConPalabra);
+		i++;
+	}
 
-	
+	qsort(arrLibros, i, sizeof(LibrosConPalabra *), cmpfunc);
+
+	printf("\nLibros con la palabra \"%s\": \n\n", palabra->palabra);
+
+	for(int j = 0; j < i; j++)
+	{
+		printf("Titulo: %s \nID: %d\n\n", arrLibros[j]->nombreLibro, arrLibros[j]->idLibro);
+	}
 }
 //-------------------------------------------------------------//
 
