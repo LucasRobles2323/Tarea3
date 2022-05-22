@@ -149,9 +149,9 @@ Crea un string con una nueva direccion de memoria, donde copiara el string recib
 //**************************  OPCIÓN 1  ***********************//
 
 /*----------------- Lista con los text a abrir -----------------*/
-List *cantArchiveOpen(char *Archives, size_t *cant)
+List *cantArchiveOpen(char *Archives, size_t *cant, bool quitarSaltoLinea))
 {
-Recibe un string de mas de una palabra separadas por espacio, separa las palabras en distintas cadenas, las guarda en una lista y retorna la lista con las palabras, ademas de aumentar el contador conforme guarda palabras en la direccion de memoria del entero que recibio, haciendo que el entero recibido se convierta en la cantidad de palabras guardadas en la lista
+Recibe un string de mas de una palabra separadas por espacio, separa las palabras en distintas cadenas, las guarda en una lista y retorna la lista con las palabras, y si la booleana recibida es verdadero, quitara el salto de linea de la ultima palabra, ademas de aumentar el contador conforme guarda palabras en la direccion de memoria del entero que recibio, haciendo que el entero recibido se convierta en la cantidad de palabras guardadas en la lista.
 }
 //-----------------------------------------//
 
@@ -172,14 +172,14 @@ Crea el camino necesario para entrar al archivo txt dentro del directorio y lo r
 /*------- Elimina caracteres no alfabeticos -------*/
 void quitarNoAlfabeticos(char *beforeString, bool quitarSpaces)
 {
-Recibe una cadena de caracteres y una variable tipo bool para saber si quitar o no los escpacios de la cadena de caracteres. Elimina los valores que no son alfabeticos de la cadena.
+Recibe una cadena de caracteres y una variable tipo bool para saber si quitar o no los escpacios de la cadena de caracteres. Elimina los valores que no son alfabeticos de la cadena, si se quita o no el espacio depende del booleano recibido.
 }
 //-----------------------------------------//
 
 /*------- separar palabras del file -------*/
 char* nextWord (FILE *f)
 {
-Toma la siguien palabra del archivo f, deja solo los caracteres alfabeticos con quitarNoAlfabeticos() y la retorna. O retorna Null si no existe palabra siguiente.
+Toma la siguiente palabra del archivo f, deja solo los caracteres alfabeticos con quitarNoAlfabeticos() y la retorna. O retorna Null si no existe palabra siguiente.
 }
 //-----------------------------------------//
 
@@ -217,8 +217,9 @@ Crea un dato tipo struct Libro con los valores que recibe guardandolos donde cor
 //-----------------------------------------//
 
 /*------- Transforma en minuscula los caracteres alfabeticos -------*/
-void minsuculas(char *cadena){
-
+void minsuculas(char *cadena)
+{
+Recibe una cadena de caracteres y deja todas las letras alfabetiacas en minuscula.
 }
 //-----------------------------------------//
 
@@ -316,14 +317,40 @@ Muestra por pantalla la palabra recibida, sus repeticiones y su frecuencia, adem
 //-----------------------------------------//
 
 /*------- Crear Arreglo en el orden requerido -------*/
-void MostrarMasFrecuentes(Libro *BOOK){(Libro *BOOK){
+void MostrarMasFrecuentes(Libro *BOOK)
+{
+Crea un arreglo del struct PalabraEnLibro con 11 de largo.
+Crea un aux con la primera palabra guardada del libro.
+Crea un contador que se usara para saber si el libro esta lleno.
 
+Crea un while para recorrer la lista de palabras dentro del libro.
+    - Calcula y guarda la frecuencia de la palabra en el libro con la funcion CalcularFrecuencia().
+    - Usa if con el contador para saber si se han guardado todos menos el ultimo espacio del arreglo
+        Si contador < 10, entonces:
+        - Guarda las primeras 10 palabras con sus frecuencias calculadas en los espacios del 0-9 del arreglo.
+        - Aumenta el tamaño del contador
+        Si no, entonces:
+        - Guarda una nueva palabra en la posicion [10] del arreglo con su frecuencia calculada.
+        - Utiliza qsort mandando una la funcion compararFrecuencia() para ordenar las palabras por su frecuencia de mayor a menor, dejando en 
+          la posicion [10] al menor, que seria el menor de los 11 y se podria remplazar, ya que buscamos los 10 mayores.
+    Pasa a la siguiente palabra de la lista con nextList().
+
+Utiliza for para recorrer el arreglo con las 10 palabras con mayor frecuencia del arreglo.
+    Muestra la palabra guardada en el arreglo, su posicion (si es la primera o la segunda mas frecuente), la cantidad de veces que aparece en el libro y su frecuencia con la funcion mostrarWordDelLibro().
 }
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 4: -----------------*/
-void PalabrasConMayotFrecuencia(Map* allBooks){
+void PalabrasConMayotFrecuencia(Map* allBooks)
+{
+    Recibe el mapa con los (libros cargados.
 
+    Solicita la id del libro.
+
+    Revisa con un if searchMap() si hay un libro con la id ingresada por el usuario.
+        Si no existe, imprime un mensaje explicando la situacion.
+    
+    Si existe, mostraria las 10 palabras mas frecuentes en el libro con la funcion MostrarMasFrecuentes().
 }
 //-------------------------------------------------------------//
 
@@ -333,32 +360,44 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 ~~~
 //**************************  OPCIÓN 5  ***********************//
 
-/*-------  -------*/
-Relevancia *crearLibro (char *titulo, int numeroDocumento){
+/*------- Crea un struct Relevancia -------*/
+Relevancia *crearLibro (char *titulo, int numeroDocumento)
+{
 
 }
 //-----------------------------------------//
 
-/*-------  -------*/
-PalabraRelevante *crearpalabra (float relevancia){
+/*------- Crea un struct PalabraRelevante -------*/
+PalabraRelevante *crearpalabra (float relevancia)
+{
 
 }
 //-----------------------------------------//
 
-/*-------  -------*/
-float calcularRel (unsigned long libroConPalabra, unsigned long cantPalabrasLibro, int contador, float ocurrenciasString){
+/*------- Calcula la relevancia de la palabra -------*/
+float calcularRel (unsigned long libroConPalabra, unsigned long cantPalabrasLibro, int contador, float ocurrenciasString)
+{
 
 }
 //-----------------------------------------//
 
-/*-------  -------*/
-void borrarMapa (Map *mapaErase){
+/*------- Borra completamente un mapa -------*/
+void borrarMapa (Map *mapaErase)
+{
+
+}
+//-----------------------------------------//
+
+/*------- Calcula y guarda la relevancia de todas las palabras del libro -------*/
+void relevanciaCreate (Map *relevancia_map, Map *libros_map, Map *palabras_map)
+{
 
 }
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 5: -----------------*/
-void relevanciaCreate (Map *relevancia_map, Map *libros_map, Map *palabras_map){
+void mostrarRelevancia (Map * mapa)
+{
 
 }
 //-------------------------------------------------------------//
@@ -398,20 +437,75 @@ void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras, int docs)
 
 //**************************  OPCIÓN 7  ***********************//
 
-/*------- Abrir y leer el libro -------*/
-void AbrirTxt(Map* string_map, Map* book_map, char *titulo, char *path){
+/*------- Mostrar o no Linea -------*/
+bool MostrarLinea(char *line, char *worD)
+{
+Recibe la linea y la palabra.
 
+Separa la linea por espacios y cada palabra de la linea la guarda en una lista.
+
+Utiliza un while para recorrer la lista con las palabras de la linea, que no termina hasta que recorra todas las palabras de la linea.
+    - Quita los caracteres no alfabeticos de la palabra de la linea con la funcion quitarNoAlfabeticos.
+    - Ponea en minuscula la palabra de la linea con la funcion minusculas().
+    - Utiliza un if para comprobar si la palabra de la linea es igual a la palabra buscada.
+        Si es igual, retorna true.
+    -Usa nextList() para pasar a la siguiente palabra de la linea
+
+Si recorrio todo la linea sin retornanr true, retorna false
+}
+//-----------------------------------------//
+
+/*------- Abrir y leer el libro -------*/
+void AbrirTxt(Map* string_map, Map* book_map, char *titulo, char *path)
+{
+Recibe los mapas de palabras y libros, el titulo y el camino que se usa para abrir el libro con el titulo correspondiente.
+
+Abre el archivo del libro con el path recibido.
+
+Solicita y guarda la palabra a buscar en una variable.
+
+La separa por espacio en caso de que haya puesto mas de una, se queda solo con la primera si hay mas de una.
+	
+Quita los caracteres no alfabeticos de la palabra a buscar y deja la palabra a buscar en minuscula.
+
+Define un contador = 0 para saber si se encontro la palabra en el libro.
+
+Utiliza un while que lee lineas del archivo y se detiene cuando el archivo termina.
+    - Utiliza un if con la funcion MostrarLinea() que retorna un booleano para saber si la palabra esta en la
+      linea leida
+        Si entra pasa lo siguiente:
+          - Si cont es 0 entonces imprime un mensaje de comienzo antes de imprimir los contextos de la palabra.
+          - Imprime la linea.
+
+Utiliza un if para ver si no se imprimio ninguna linea.
+    Si no se imprimio ninguna linea, manda un mensaje explicando que la palabra no se encuentra en el texto
+
+Cierra el archivo.
 }
 //-----------------------------------------//
 
 /*------- Conseguir el .txt para abrir el libro -------*/
-void BuscarIdLibro(Map *book_actual, Map *word_actual,  char *title){
+void BuscarIdLibro(Map *book_actual, Map *word_actual,  char *title)
+{
+Recibe 2 mapas y el titulo.
 
+Le quita el salto de linea al titulo.
+
+Comprueba si el libro fue previeamente cargado con un el mapa de libros if y la funcion searchMap()
+	Si no existe el libro, imprime un mensaje con la situacion.
+
+Manda a la funcion AbrirTxt() los 2 mapas, el titulo, y el path del archivo del libro
+	Esta funcion abre el archivo, solicita la palabra y muestra su contexto.
 }
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 7: -----------------*/
-void MostrarContexto(Map *palabrasMap, Map *librosMap){
+void MostrarContexto(Map *palabrasMap, Map *librosMap)
+{
+Lee el titulo ingresado por el usuario.
+
+Envia los mapas recibidos y el titulo a la funcion BuscarIdLibro()
+    En esta funcion nos mostraria el contexto de una palabra en el libro si existe-
 }
 //-------------------------------------------------------------//
 
@@ -477,7 +571,8 @@ Crea un while con la condicion 'option != 8'.
 /--------------------------------------------------------------------------------------------------------------/
 
  option =  7:
- 
+ Solicita un titulo de libro, si no fue cargado previamente termina su funcion imprimiendo un mensaje de explicacion, si fue cargado correctamente, solicita una palabra para despues mostrarla en el contexto.
+ Utiliza la funcion MostrarContexto() para cumplir su cometido.
 
 /--------------------------------------------------------------------------------------------------------------/
 

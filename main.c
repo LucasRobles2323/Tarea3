@@ -622,10 +622,7 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 
 //**************************  OPCIÓN 5  ***********************//
 
-/*-------  -------*/
-//-----------------------------------------//
-
-/*----------------- OPCIÓN 5: -----------------*/
+/*------- Crea un struct Relevancia -------*/
 Relevancia *crearLibro (char *titulo, int numeroDocumento){
 	Relevancia *new = (Relevancia*) malloc (sizeof(Relevancia));
 	new->titulo = strdup (titulo);
@@ -634,14 +631,18 @@ Relevancia *crearLibro (char *titulo, int numeroDocumento){
 	setSortFunction(new->PalabraRelevante, lower_than_int);
 	return new;
 }
+//-----------------------------------------//
 
+/*------- Crea un struct PalabraRelevante -------*/
 PalabraRelevante *crearpalabra (float relevancia){
 	PalabraRelevante *new = (PalabraRelevante*) malloc (sizeof(PalabraRelevante));
 	new->relevancia = relevancia;
 	new->palabra = createList();
 	return new;
 }
+//-----------------------------------------//
 
+/*------- Calcula la relevancia de la palabra -------*/
 float calcularRel (unsigned long libroConPalabra, unsigned long cantPalabrasLibro, int contador, float ocurrenciasString){
 	float logaritmo, division;
     
@@ -650,7 +651,9 @@ float calcularRel (unsigned long libroConPalabra, unsigned long cantPalabrasLibr
 
 	return (division * logaritmo);
 }
+//-----------------------------------------//
 
+/*------- Borra completamente un mapa -------*/
 void borrarMapa (Map *mapaErase){
 	Relevancia *borrarRelevancia = firstMap (mapaErase);
 	while (borrarRelevancia != NULL){
@@ -660,7 +663,9 @@ void borrarMapa (Map *mapaErase){
 	}
 
 }
+//-----------------------------------------//
 
+/*------- Calcula y guarda la relevancia de todas las palabras del libro -------*/
 void relevanciaCreate (Map *relevancia_map, Map *libros_map, Map *palabras_map){
 	if ((firstMap (libros_map)) == NULL || libros_map == NULL){
 		printf ("No se ha cargado ningun archivo\n");
@@ -756,8 +761,10 @@ void relevanciaCreate (Map *relevancia_map, Map *libros_map, Map *palabras_map){
 	        }
 	    }
     }
-}	
+}
+//-----------------------------------------//
 
+/*----------------- OPCIÓN 5: -----------------*/
 void mostrarRelevancia (Map * mapa){
 	Relevancia *estructura = firstMap (mapa);
 	if (estructura == NULL){
@@ -803,7 +810,6 @@ void mostrarRelevancia (Map * mapa){
 	}
 }
 //-------------------------------------------------------------//
-
 
 //**************************************************************//
 
@@ -880,6 +886,25 @@ void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras, int docs)
 
 //**************************  OPCIÓN 7  ***********************//
 
+/*------- Mostrar o no Linea -------*/
+bool MostrarLinea(char *line, char *worD){
+	int cant = 0;
+	List *lineList = cantArchiveOpen(line, &cant, true);
+	char *WordOfLine = firstList(lineList);
+	while (WordOfLine)
+	{
+		quitarNoAlfabeticos(WordOfLine, true);
+		minsuculas(WordOfLine);
+		if (strcmp(WordOfLine, worD) == 0)
+		{
+			return true;
+		}
+		WordOfLine = nextList(lineList);
+	}
+	return false;
+}
+//-----------------------------------------//
+
 /*------- Abrir y leer el libro -------*/
 void AbrirTxt(Map* string_map, Map* book_map, char *titulo, char *path){
 	// Abre un archivo especifico y guarda sus datos
@@ -890,24 +915,35 @@ void AbrirTxt(Map* string_map, Map* book_map, char *titulo, char *path){
 
     char linea[1024]; // Cadena de caracter para guardar una linea del archivo
 	char wordsInput[200];
-	int cant = 0;
+	int cont = 0;
 	
 	printf("Escriba la palabra a buscar con solo caracteres alfabeticos.\n");
 	printf("(Si escribe dos palabras separadas por espacio solo bucara la primear)\n");
 	fgets(wordsInput, 200, stdin);
 	printf("\n\n");
-	List* wordsList = cantArchiveOpen(wordsInput, &cant, true);
+	List* wordsList = cantArchiveOpen(wordsInput, &cont, true);
 	char *wordToSearch = firstList(wordsList);
+	quitarNoAlfabeticos(wordToSearch, true);
 	minsuculas(wordToSearch);
-
-	printf("En el libro %s, podemos encontrar la palabra ", titulo);
-	printf("\"%s\" en los siguientes contexto:\n", wordToSearch);
+	cont = 0;
 	
-	/*while (fgets(linea, 1023, F) != NULL) { 
+	
+	while (fgets(linea, 1023, F) != NULL) { 
         // Recorre el archivo leyendo linea por linea
-        // guardando los datos de cada linea en listas
 
-	}*/
+		if(MostrarLinea(strdup(linea), wordToSearch)){
+			if (cont == 0){
+				printf("En el libro \"%s\", podemos encontrar la palabra ", titulo);
+				printf("\"%s\" en los siguientes contexto:\n", wordToSearch);
+			}
+			
+			printf("%s\n", linea); cont++;
+		}
+	}
+	if (cont == 0)
+	{
+		printf("La palabra \"%s\" no esta presente en el texto \"%s\"", wordToSearch, titulo);
+	}
 
 	fclose(F);// Se cierra el archivo
 }
