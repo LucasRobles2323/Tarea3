@@ -175,7 +175,8 @@ char * _strdup(const char * str){
 //**************************  OPCIÓN 1  ***********************//
 
 /*----------------- Lista con los text a abrir -----------------*/
-List *cantArchiveOpen(char *Archives, size_t *cant){ //Crea una lista con las palabras separadas por espacio
+List *cantArchiveOpen(char *Archives, size_t *cant, bool quitarSaltoLinea){ 
+	//Crea una lista con las palabras separadas por espacio
 	List *newList = createList();
     char *Text = strtok(Archives, " ");
 	while (Text != NULL)
@@ -184,8 +185,11 @@ List *cantArchiveOpen(char *Archives, size_t *cant){ //Crea una lista con las pa
         (*cant)++;
 		Text = strtok(NULL, " ");
 	}
-	Text = lastList(newList);
-	Text = strtok(Text, "\n");
+	if (quitarSaltoLinea)
+	{
+		Text = lastList(newList);
+		Text = strtok(Text, "\n");
+	}
     return newList;
 }
 //-----------------------------------------//
@@ -430,7 +434,7 @@ void CargarDocumento(Map *palabrasMap, Map *librosMap, int *dTotal){
 	fgets(Archives,200,stdin);
 	printf("\n");
     size_t cant = 0;
-	List *FilesToOpen = cantArchiveOpen(Archives, &cant);
+	List *FilesToOpen = cantArchiveOpen(Archives, &cant,true);
     carpeta = opendir(ubicacion);
 	while ((dirp = readdir(carpeta)) != NULL && cant > 0){
         if(esText(dirp->d_name, FilesToOpen, &cant) == 0) continue;
@@ -883,8 +887,28 @@ void AbrirTxt(Map* string_map, Map* book_map, char *titulo, char *path){
     FILE *F = fopen(path, "r"); // Abre el archivo con el nombre recibido en modo lectura
     
 	if (!F){return;}// Si no existe el archivo, cierra el programa
-	printf("%s\n", path);
+
     char linea[1024]; // Cadena de caracter para guardar una linea del archivo
+	char wordsInput[200];
+	int cant = 0;
+	
+	printf("Escriba la palabra a buscar con solo caracteres alfabeticos.\n");
+	printf("(Si escribe dos palabras separadas por espacio solo bucara la primear)\n");
+	fgets(wordsInput, 200, stdin);
+	printf("\n\n");
+	List* wordsList = cantArchiveOpen(wordsInput, &cant, true);
+	char *wordToSearch = firstList(wordsList);
+	minsuculas(wordToSearch);
+
+	printf("En el libro %s, podemos encontrar la palabra ", titulo);
+	printf("\"%s\" en los siguientes contexto:\n", wordToSearch);
+	
+	/*while (fgets(linea, 1023, F) != NULL) { 
+        // Recorre el archivo leyendo linea por linea
+        // guardando los datos de cada linea en listas
+
+	}*/
+
 	fclose(F);// Se cierra el archivo
 }
 //-----------------------------------------//
@@ -893,7 +917,6 @@ void AbrirTxt(Map* string_map, Map* book_map, char *titulo, char *path){
 void BuscarIdLibro(Map *book_actual, Map *word_actual,  char *title){
 	Libro *aux;
 	title = strtok(title, "\n");
-	printf("%s %d\n", title, strlen(title));
 	if ((aux =searchMap(book_actual, title)) == NULL)
 	{
 		printf("El libro que desea abrir no esta cargado desde el direcorio\n");

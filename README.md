@@ -61,6 +61,7 @@ Hasta ahora todas las funciones están funcionales en casos normales ósea sin q
 Contiene 2 struct, una para las canciones y otra destinada a las listas de reproducción
 
 ![Structs](https://drive.google.com/uc?id=1NvzTyFpgU4nEvHODGwUkh-O3uSvGLImu)
+![Structs](https://drive.google.com/uc?id=17L4OZK1pDPhVDA8M67yJr-5CIrnVDEJ8)
 
 
 ## Funciones:
@@ -150,68 +151,68 @@ Crea un string con una nueva direccion de memoria, donde copiara el string recib
 /*----------------- Lista con los text a abrir -----------------*/
 List *cantArchiveOpen(char *Archives, size_t *cant)
 {
-
+Recibe un string de mas de una palabra separadas por espacio, separa las palabras en distintas cadenas, las guarda en una lista y retorna la lista con las palabras, ademas de aumentar el contador conforme guarda palabras en la direccion de memoria del entero que recibio, haciendo que el entero recibido se convierta en la cantidad de palabras guardadas en la lista
 }
 //-----------------------------------------//
 
 /*------- Abrir o no el archivo -------*/
 int esText(char *nombreArchivo, List *archiveToOpen, size_t *cant)
 {
-
+Coprueba si el archivo en el que estamos del directorio concuerda con uno de los archivos que debemos arbrir, si no debemos abrir el archivo en el que estamos del directorio retorna 0, si debemos abrirlo retorna 1.
 }
 //-----------------------------------------//
 
 /*------- Conseguir path al txt -------*/
 char *get_nameFile(char *archive, char *directory)
 {
-
+Crea el camino necesario para entrar al archivo txt dentro del directorio y lo retorna.
 }
 //-----------------------------------------//
 
 /*------- Elimina caracteres no alfabeticos -------*/
 void quitarNoAlfabeticos(char *beforeString, bool quitarSpaces)
 {
-
+Recibe una cadena de caracteres y una variable tipo bool para saber si quitar o no los escpacios de la cadena de caracteres. Elimina los valores que no son alfabeticos de la cadena.
 }
 //-----------------------------------------//
 
 /*------- separar palabras del file -------*/
 char* nextWord (FILE *f)
 {
-
+Toma la siguien palabra del archivo f, deja solo los caracteres alfabeticos con quitarNoAlfabeticos() y la retorna. O retorna Null si no existe palabra siguiente.
 }
 //-----------------------------------------//
 
 /*------- separar palabras del file -------*/
 char* get_title(FILE *f)
 {
-
+Lee el titulo del archivo f, deja solo los caracteres alfabeticos y los espacios con quitarNoAlfabeticos() y lo retorna. En caso de  que no exista, retorna NULL.
 }
 //-----------------------------------------//
 
 /*------- Crear struct LibrosConPalabra -------*/
 LibrosConPalabra *createBookConWord(unsigned long idToBook, char* titleToBook){
-
+Crea un dato tipo struct LibrosConPalabra con los valores que recibe guardandolos donde corresponden. Y retorna la struct LibrosConPalabra creada.
 }
 //-----------------------------------------//
 
 /*------- Crear struct Palabra -------*/
 Palabra *createWord(char *WORD){
-
+Crea un dato tipo struct Palabra con los valores que recibe guardandolos donde corresponden. Y retorna la struct LibrosConPalabra creada.
 }
 //-----------------------------------------//
 
 /*------- Crear struct PalabraEnLibro -------*/
 PalabraEnLibro *createWordEnBook(char* nameToWord)
 {
-
+Crea un dato tipo struct PalabraEnLibro con los valores que recibe guardandolos donde corresponden. Y retorna la struct LibrosConPalabra creada.
 }
 //-----------------------------------------//
 
 /*------- Crear struct Libro -------*/
 Libro *createBook(char *WORD, unsigned long ID, char *TITLE, char *TXT){
 {
-
+Crea un dato tipo struct Libro con los valores que recibe guardandolos donde corresponden. Y retorna la struct LibrosConPalabra creada.
 }
 //-----------------------------------------//
 
@@ -446,7 +447,7 @@ Crea un while con la condicion 'option != 8'.
 /--------------------------------------------------------------------------------------------------------------/
 
  option =  1:
-
+ Carga los archivos del directorio con los nombres ingresados por el usuarion y guarda informacion en los mapas de palabras y libros. Utiliza la funcion CargarDocumento() para realizar sus funciones.
 
 /--------------------------------------------------------------------------------------------------------------/
 
