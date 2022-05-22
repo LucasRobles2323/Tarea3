@@ -481,82 +481,85 @@ void MostrarDocumentosOrdenados(Map *allBooks){
 
 //**************************************************************//
 
+
+
 //**************************  OPCIÓN 3  ***********************//
 
-	/*------- Comparar Strings -------*/
-	int compare_strings_advanced(char* cadena1, char *cadena2) // cadena 2 avanza, la 1 no
-	{
-		size_t largo = strlen(cadena2);  // largo cadena dinamica
-		size_t letras = 0;
-		while(cadena1[letras] != '\0'){letras++;} // letras de la cadena ingresada por el usuario
-		int j = 0; size_t cont_iguales = 0;
-		
-		minsuculas(cadena1); minsuculas(cadena2); // funciones similares a tolower
-
-		for(int i = 0; i < largo; i++) // for que hace el algrotimo necesario para ver si contienen las palabras
-		{
-			if(cadena2[i] != ' ') 
-			{
-			if (cadena1[j] == cadena2[i])
-			{
+/*------- Comparar Strings -------*/
+int compare_strings_advanced(char* cadena1, char *cadena2) // cadena 2 avanza, la 1 no
+{
+	size_t largo = strlen(cadena2);  // largo cadena dinamica
+	size_t letras = 0;
+	while(cadena1[letras] != '\0'){letras++;} // letras de la cadena ingresada por el usuario
+	int j = 0; size_t cont_iguales = 0;
+	
+	minsuculas(cadena1); minsuculas(cadena2); // Las transforma en cadenas de puras minusculas
+	
+	for(int i = 0; i < largo; i++) // for que hace el algrotimo necesario para ver si contienen las palabras{
+		if(cadena2[i] != ' ') {
+			if (cadena1[j] == cadena2[i]){
 				j++; cont_iguales++;  
 				if(cont_iguales == letras)return 0;
-			}else{j = 0;} // si no son iguales vuelve al principio
-			}		
-		}
-
-		return 1;	
-	}
-	//-----------------------------------------//
-	//-----------------------------------------//
-
-	int compare_words(char* title, char* titleLibro) // compara palabra a palabra
-	{
-		size_t cont = 0; 
-		List* words = cantArchiveOpen(strdup(title), &cont, false); // función útil para listar una frase
-		char *part_word;
-		part_word = firstList(words);
-		while(part_word != NULL) // se recorre la lista
-		{	
-			if((compare_strings_advanced(part_word, titleLibro) != 0))return 1; // una comparación de strings más avanzada
-			part_word = nextList(words);
-		}
-		return 0;
-	}
-
-	/*----------------- OPCIÓN 3: -----------------*/
-	void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
-	{
-		book = firstMap(booksMap); int cont = 0;
-			while(book != NULL) // recorre el mapa
-			{
-				if(compare_words(title, strdup(book->nameBook)) == 0) // función principal
-				{	
-					if(cont == 0){printf(" \n Libro encontrado: \n");printf("\n"); cont++;} // contador para mejor estética
-					mostrarLibro(book);	
-					book = nextMap(booksMap);
-
-				}else{book = nextMap(booksMap);}
 			}
-			if(cont > 0){printf("Fin libros encontrados");}
-			if(cont == 0)
-			{printf("\nLibro no encontrado");}
-			return;
+			else{j = 0;} // si no son iguales vuelve al principio
+		}		
 	}
-	//-------------------------------------------------------------//
 
-	void BuscarLibro(Libro* book, Map* booksMap) // función que permite el ingreso de datos
+	return 1;	
+}
+//-----------------------------------------//
+
+/*------- Comparar palabras -------*/
+int compare_words(char* title, char* titleLibro) // compara palabra a palabra
+{
+	size_t cont = 0; 
+	List* words = cantArchiveOpen(strdup(title), &cont, false); // función útil para listar una frase
+	char *part_word;
+	part_word = firstList(words);
+	while(part_word != NULL) // se recorre la lista
+	{	
+		if((compare_strings_advanced(part_word, titleLibro) != 0))return 1; // una comparación de strings más avanzada
+		part_word = nextList(words);
+	}
+	return 0;
+}
+//-----------------------------------------//
+
+/*------- Busca y muestra libro por el titulo -------*/
+void BuscarLibroTitulo(Libro* book, Map* booksMap, char* title)
+{
+	book = firstMap(booksMap); int cont = 0;
+	
+	while(book != NULL) // recorre el mapa
 	{
-		printf("Ingrese el nombre de los ejemplares que desea buscar \n");
-			char title[1000];
-			scanf("%[0-9a-zA-Z ,-]", title);
-			getchar();
-			BuscarLibroTitulo(book, booksMap, title);
-			return;
+		if(compare_words(title, strdup(book->nameBook)) == 0) // función principal
+		{	
+			if(cont == 0){printf(" \n Libro encontrado: \n");printf("\n"); cont++;} // contador para mejor estética
+			mostrarLibro(book);	
+			book = nextMap(booksMap);
+		}
+		else{book = nextMap(booksMap);}
 	}
+	if(cont > 0){printf("Fin libros encontrados");}
+	if(cont == 0)
+	{printf("\nLibro no encontrado");}
+	return;
+}
+//-----------------------------------------//
 
+/*----------------- OPCIÓN 3: -----------------*/
+void BuscarLibro(Libro* book, Map* booksMap) // función que permite el ingreso de datos
+{
+	printf("Ingrese el nombre de los ejemplares que desea buscar \n");
+	char title[1000];
+	scanf("%[0-9a-zA-Z ,-]", title);
+	getchar();
+	BuscarLibroTitulo(book, booksMap, title);
+	return;
+}
+//-------------------------------------------------------------//
 
-	//**************************************************************//
+//**************************************************************//
 
 
 
