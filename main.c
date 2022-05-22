@@ -36,6 +36,7 @@ typedef struct {
 typedef struct {
 	int idBook;
 	char *nameBook;
+	char *txtBook;
 	unsigned long cantPalabrasBook;
 	unsigned long long cantCaracteresBook;
 	List *EnLibro; // Lista de struct PalabraEnLibro
@@ -190,7 +191,7 @@ List *cantArchiveOpen(char *Archives, size_t *cant){ //Crea una lista con las pa
 //-----------------------------------------//
 
 /*------- Abrir o no el archivo -------*/
-int esText(char *nombreArchivo, List *archiveToOpen, size_t *cant){//Confirma si abrir un archivo del directorio
+int esText(char *nombreArchivo, List *archiveToOpen, size_t *cant){ //Confirma si abrir un archivo del directorio
     char *OpenYoN = (char*)firstList(archiveToOpen);
 	while (OpenYoN != NULL)
     {
@@ -206,7 +207,7 @@ int esText(char *nombreArchivo, List *archiveToOpen, size_t *cant){//Confirma si
 //-----------------------------------------//
 
 /*------- Conseguir path al txt -------*/
-char *get_nameFile(char *archive, char *directory){ // Crea el path para el fopen y abrir bien el archivo
+char *get_nameFile(char *archive, char *directory){
 	char aux[200];
 	strcpy(aux, directory);
 	strcat(aux, "/");
@@ -298,12 +299,13 @@ PalabraEnLibro *createWordEnBook(char* nameToWord){
 //-----------------------------------------//
 
 /*------- Crear struct Palabra -------*/
-Libro *createBook(char *WORD, unsigned long ID, char *TITLE){
+Libro *createBook(char *WORD, unsigned long ID, char *TITLE, char *TXT){
     Libro *new = (Libro*) malloc (sizeof(Libro));
     new->idBook = ID;
     new->nameBook = strdup(TITLE);
 	new->cantPalabrasBook = 1;
 	new->cantCaracteresBook = strlen(WORD);
+	new->txtBook = strdup(TXT);
     return new;
 }
 //-----------------------------------------//
@@ -318,10 +320,9 @@ void minsuculas(char *cadena){
 
 /*------- Guardar en los mapas la informacion -------*/
 void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave, 
-                     Map *words_Map, Map *books_Map){
+                     Map *words_Map, Map *books_Map, char *txt){
 	
 	minsuculas(wordToSave); // Transforma en minusculas las palabras a guardar
-
 
 	// Guarda los datos en el mapa Palabras
 	Palabra *auxWord = NULL;
@@ -338,8 +339,8 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 		auxWord = searchMap(words_Map, wordToSave);
         auxWord->ocurrenciaPalabra++;
         auxWord2 = firstList(auxWord->ConPalabra);
-		while (auxWord2)
-		{// Revisa si el libro esta en la lista de libros donde se encuentra la palabra
+		while (auxWord2)// Revisa si el libro esta en la lista de libros donde se encuentra la palabra
+		{
 			if (is_equal_string(titleToSave, auxWord2->nombreLibro) == 1)
 			{
 				auxWord2->ocurrenciaEnLibro++;
@@ -359,7 +360,7 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 	PalabraEnLibro *auxBook2 = NULL;
 	if (searchMap(books_Map, titleToSave) == NULL)
 	{// Si no estaba guardado el dato, lo guarda. Si existia aumentara ocurrencias
-		auxBook = createBook(wordToSave, atoi(idToSave),titleToSave);
+		auxBook = createBook(wordToSave, atoi(idToSave),titleToSave, txt);
 		auxBook->EnLibro = createList();
 		auxBook2 = createWordEnBook(wordToSave);
 		pushBack(auxBook->EnLibro, auxBook2);
@@ -369,8 +370,8 @@ void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave,
 		auxBook = searchMap(books_Map, titleToSave);
 		auxBook->cantCaracteresBook += strlen(wordToSave);
 		auxBook2 = firstList(auxBook->EnLibro);
-		while (auxBook2)
-		{// Revisa si la palabra esta en la lista de palabras del libro
+		while (auxBook2) // Revisa si la palabra esta en la lista de palabras del libro
+		{
 			if (is_equal_string(auxBook2->String, wordToSave))
 			{
 				auxBook2->ocurrenciaString++;
@@ -411,7 +412,7 @@ void ReadTxt(Map* string_map, Map* book_map, char *name, char *nameDirectory, in
 		}
 
 		if (save)
-		{saveWordsInMaps(word, title, name, string_map, book_map);}
+		{saveWordsInMaps(word, title, name, string_map, book_map, nameFile);}
         
 		word = nextWord(F);
     }
@@ -875,10 +876,43 @@ void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras, int docs)
 
 //**************************  OPCIÓN 7  ***********************//
 
-/*-------  -------*/
+/*------- Abrir y leer el libro -------*/
+void AbrirTxt(Map* string_map, Map* book_map, char *titulo, char *path){
+	// Abre un archivo especifico y guarda sus datos
+	
+    FILE *F = fopen(path, "r"); // Abre el archivo con el nombre recibido en modo lectura
+    
+	if (!F){return;}// Si no existe el archivo, cierra el programa
+	printf("%s\n", path);
+    char linea[1024]; // Cadena de caracter para guardar una linea del archivo
+	fclose(F);// Se cierra el archivo
+}
+//-----------------------------------------//
+
+/*------- Conseguir el .txt para abrir el libro -------*/
+void BuscarIdLibro(Map *book_actual, Map *word_actual,  char *title){
+	Libro *aux;
+	title = strtok(title, "\n");
+	printf("%s %d\n", title, strlen(title));
+	if ((aux =searchMap(book_actual, title)) == NULL)
+	{
+		printf("El libro que desea abrir no esta cargado desde el direcorio\n");
+		return;
+	}
+
+	AbrirTxt(word_actual, book_actual, title, aux->txtBook);
+}
 //-----------------------------------------//
 
 /*----------------- OPCIÓN 7: -----------------*/
+void MostrarContexto(Map *palabrasMap, Map *librosMap){
+    char tituloOpen[201];
+	printf("Escriba el titulo de un libro (no utilice caracteres no alfabeticos)\n");
+	fgets(tituloOpen,200,stdin);
+	printf("\n");
+	
+	BuscarIdLibro(librosMap, librosMap, tituloOpen);
+}
 //-------------------------------------------------------------//
 
 //**************************************************************//
@@ -953,6 +987,7 @@ int main() {
 			//-----------------------------------------//
 		case 7:
 			/*------- Mostrar palabra en su contexto dentro del libro -------*/
+			MostrarContexto(palabrasGeneral, librosGeneral);
 			break;
 			//-----------------------------------------//
         default:
