@@ -41,7 +41,16 @@ typedef struct {
 	List *EnLibro; // Lista de struct PalabraEnLibro
 }Libro; //Struct que guarda los datos de un libro para el mapa de libro
 
+typedef struct{
+	List *palabra;
+	float relevancia;
+}PalabraRelevante;
 
+typedef struct{
+	Map *PalabraRelevante; 
+	char *titulo;
+	int numeroDocumentos;
+}Relevancia;
 
 //------------------FUNCIONES-------------------------//
 
@@ -68,7 +77,7 @@ int lower_than_string(void * key1, void * key2) {
   retorna 1 si son iguales
 */
 int is_equal_int(void * key1, void * key2) {
-    if(*(int*)key1 == *(int*)key2) return 1;
+    if(*(float*)key1 == *(float*)key2) return 1;
     return 0;
 }
 
@@ -77,7 +86,7 @@ int is_equal_int(void * key1, void * key2) {
   retorna 1 si son key1<key2
 */
 int lower_than_int(void * key1, void * key2) {
-    if(*(int*)key1 < *(int*)key2) return 1;
+    if(*(float*)key1 > *(float*)key2) return 1;
     return 0;
 }
 
@@ -614,6 +623,7 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 /*----------------- OPCIÓN 5: -----------------*/
 //-------------------------------------------------------------//
 
+
 //**************************************************************//
 
 
@@ -712,6 +722,8 @@ int main() {
     setSortFunction(palabrasGeneral,lower_than_string);
 	Map *librosGeneral = createMap(is_equal_string);
     setSortFunction(librosGeneral,lower_than_string);
+	Map *titulo_relevante = createMap(is_equal_string);
+	setSortFunction(titulo_relevante, lower_than_string);
 
 	int option = 0; //Variable que decide la opcion del menun seleccionada
 	int documentosTotales = 0;
@@ -754,6 +766,8 @@ int main() {
 			//-----------------------------------------//
 		case 5:
 			/*------- Palabras mas relevantes -------*/
+			relevanciaCreate(titulo_relevante, librosGeneral, palabrasGeneral);
+			mostrarRelevancia(titulo_relevante);
 			break;
 			//-----------------------------------------//
 		case 6:
