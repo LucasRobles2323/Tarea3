@@ -24,7 +24,8 @@ Estudiantes PUCV curso: ICI2240-1  ESTRUCTURA DE DATOS
 - ### Gerard Espinoza: 
     Pts premio/castigo: 0.
 
-    Siento que a pesar de tener ya experiencia con las funciones de búsqueda demore más de lo debido en implementar las de esta tarea, además de que en un principio no utilice las maneras más eficientes de búsqueda en las funciones por lo que tuve que rehacerlas y reeinterpretarlas.
+   Problemas de comunicación con mis compañeros, es decir, utilicé varias funciones que ellos implementaron y tuve que preguntar mucho sobre algunas cuestiones 
+   específicas, ya que a veces me crasheaba por malas interacciones entre las mismas.
 
 ### ¡Grande Huachipato!
 
