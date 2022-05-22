@@ -744,7 +744,7 @@ Crea un while con la condicion 'option != 8'.
 /--------------------------------------------------------------------------------------------------------------/
 
  option =  3:
- 
+ establece una variable de tipo libro para poder utilizar esta struct y la ingresa a la función BuscarLibro() junto al mapa de libros.
  
 /--------------------------------------------------------------------------------------------------------------/
 
