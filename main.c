@@ -600,8 +600,11 @@ void mostrarLibroConPalabra(LibrosConPalabra *libro)
 void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras)
 {
 	char stringPalabra[101];
+	int imprimidos = 0;
+	double auxRelevancia = 0;
 	Palabra *search;
 	LibrosConPalabra *libro;
+	Libro auxLibro;
 
 	printf("Ingrese la palabra a buscar: ");
 	scanf("%[0-9a-zA-Z ,-]", stringPalabra);
@@ -611,8 +614,10 @@ void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras)
 
 	printf("\nLibros con la palabra %s: \n\n", search->palabra);
 	libro = (LibrosConPalabra *) firstList(search->ConPalabra);
-	while(libro)
+
+	while(imprimidos < search->LibrosWithPalabra)
 	{
+		auxLibro = (Libro *) searchMap(mapaLibros, libro->nombreLibro);
 		mostrarLibroConPalabra(libro);
 		libro = (LibrosConPalabra *) nextList(search->ConPalabra);
 	}
