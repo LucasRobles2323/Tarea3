@@ -7,7 +7,7 @@ Estudiantes PUCV curso: ICI2240-1  ESTRUCTURA DE DATOS
 - ### Ademir Muñoz: 
     Pts premio/castigo: 0.
 
-    Siento que deberia mejorar la forma de hacer los algoritmos siempre encuentro una falla en estos y tengo que modificarlo para que despues aparesca otro originado por el cambio anterior y asi.
+   Subestime el tiempo que tenia al principio no le di importancia y de pronto habian prubeas, controles y una trabajo/disertacion que coicidieron con la tarea 3, le fui dejando restandole prioridad debido a que las otras eran pruebas y cuando todo finalizo quedaban pocos dias para hacer algo y nisiquiera habia pensado en como hacer la tarea, tuve 0 organizacion de mi tiempo y ese fue mi error.
 
 
 - ### Lucas Robles: 
@@ -561,8 +561,16 @@ Crea un while con la condicion 'option != 8'.
 /--------------------------------------------------------------------------------------------------------------/
 
  option =  5:
+ La primera funcion calcula la relevancia y esta tiene 5 opciones:
+ 1.Si el mapa no fue creado se crea una y se calcula la relevancia.
+ 2.Si se añaden nuevos documentos y el mapa ya fue creado, se borra el mapa y se crea uno nuevo con los nuevos datos.
+ 3.Si el mapa de libros no existe devuelve un mensaje diciendo que no se ha cargado documentos.
+ 4.Si la cantidad de documentos es igual a 1 se dice al usuario que todas las palabras tendran relevancia 0.
+ 5.Si el mapa existe y no se han cargado nuevos documentos no se hara nada.
  
-
+ La segunda funcion pregunta al usuario sobre que libro quiere saber las palabras relevantes
+ una vez escrito si existe se muestra por pantalla las 10 palabras mas relevantes
+ si no existe se le dice al usuario que no escribio bien .
 /--------------------------------------------------------------------------------------------------------------/
 
  option =  6:
@@ -577,23 +585,7 @@ Crea un while con la condicion 'option != 8'.
 /--------------------------------------------------------------------------------------------------------------/
 
  option =  8:
- 
- 
-/--------------------------------------------------------------------------------------------------------------/
-
- option =  9:
- 
-
-/--------------------------------------------------------------------------------------------------------------/
-
- option = 10:
- 
-
-/--------------------------------------------------------------------------------------------------------------/
-
- option = 11:
- 
-
+ exit.
 /--------------------------------------------------------------------------------------------------------------/
 
  default:
