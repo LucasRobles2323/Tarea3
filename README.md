@@ -208,8 +208,8 @@ PalabraEnLibro *createWordEnBook(char* nameToWord)
 }
 //-----------------------------------------//
 
-/*------- Crear struct Palabra -------*/
-Libro *createBook(char *WORD, unsigned long ID, char *TITLE)
+/*------- Crear struct Libro -------*/
+Libro *createBook(char *WORD, unsigned long ID, char *TITLE, char *TXT){
 {
 
 }
@@ -223,7 +223,7 @@ void minsuculas(char *cadena){
 
 /*------- Guardar en los mapas la informacion -------*/
 void saveWordsInMaps(char *wordToSave, char* titleToSave, char *idToSave, 
-                     Map *words_Map, Map *books_Map)
+                     Map *words_Map, Map *books_Map, char *txt){
 {
 
 }
@@ -297,7 +297,7 @@ void BuscarLibro(Libro* book, Map* booksMap)
 
 /*------- Calcula la frecuencia de cada una -------*/
 void calcularFrecuencia(PalabraEnLibro *aux, double cantWords){
-
+Calcula y guarda la frecuencias en el dato tipo struct PalabraEnLibro
 }
 //-----------------------------------------//
 
@@ -332,6 +332,34 @@ void PalabrasConMayotFrecuencia(Map* allBooks){
 ~~~
 //**************************  OPCIÓN 5  ***********************//
 
+/*-------  -------*/
+Relevancia *crearLibro (char *titulo, int numeroDocumento){
+
+}
+//-----------------------------------------//
+
+/*-------  -------*/
+PalabraRelevante *crearpalabra (float relevancia){
+
+}
+//-----------------------------------------//
+
+/*-------  -------*/
+float calcularRel (unsigned long libroConPalabra, unsigned long cantPalabrasLibro, int contador, float ocurrenciasString){
+
+}
+//-----------------------------------------//
+
+/*-------  -------*/
+void borrarMapa (Map *mapaErase){
+
+}
+//-----------------------------------------//
+
+/*----------------- OPCIÓN 5: -----------------*/
+void relevanciaCreate (Map *relevancia_map, Map *libros_map, Map *palabras_map){
+
+}
 //-------------------------------------------------------------//
 
 //**************************************************************//
@@ -366,7 +394,25 @@ void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras, int docs)
 ~~~
 ---
 ~~~
+
 //**************************  OPCIÓN 7  ***********************//
+
+/*------- Abrir y leer el libro -------*/
+void AbrirTxt(Map* string_map, Map* book_map, char *titulo, char *path){
+
+}
+//-----------------------------------------//
+
+/*------- Conseguir el .txt para abrir el libro -------*/
+void BuscarIdLibro(Map *book_actual, Map *word_actual,  char *title){
+
+}
+//-----------------------------------------//
+
+/*----------------- OPCIÓN 7: -----------------*/
+void MostrarContexto(Map *palabrasMap, Map *librosMap){
+}
+//-------------------------------------------------------------//
 
 //**************************************************************//
 ~~~
