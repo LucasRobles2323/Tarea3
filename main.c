@@ -513,26 +513,6 @@ void calcularFrecuencia(PalabraEnLibro *aux, double cantWords){
 }
 //-----------------------------------------//
 
-/*------- Muestra la palabraDelLibro con su frecuencia y ocurrencia -------*/
-void mostrarWordDelLibro(PalabraEnLibro *see, int num){
-	printf("  ");
-
-	if (num < 10){printf(" ");}
-	printf("%d.- ", num);
-
-	printf("La palabra \"%s\" se repite", see->String);
-	printf(" %.0f y tiene como frecuencia %lf\n", see->ocurrenciaString, see->frecuencia);
-}
-//-----------------------------------------//
-
-//**************************  OPCIÓN 4  ***********************//
-
-/*------- Calcula la frecuencia de cada una -------*/
-void calcularFrecuencia(PalabraEnLibro *aux, double cantWords){
-	aux->frecuencia = (double) aux->ocurrenciaString / cantWords;
-}
-//-----------------------------------------//
-
 /*------- Funcion comparar para ordenar con qsort por relevancia -------*/
 int compararFrecuencia (const void *a,const void *b)
 {
