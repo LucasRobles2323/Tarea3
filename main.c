@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <dirent.h>
-#include <string.h>
+#include <math.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "list.h"
@@ -16,6 +16,7 @@ typedef struct {
 	int idLibro;
 	char *nombreLibro;
 	unsigned long ocurrenciaEnLibro;
+	double relevancia;
 }LibrosConPalabra;
 
 typedef struct {
@@ -670,7 +671,6 @@ int main() {
 		case 1:
             /*------- Cargar documentos -------*/
 			CargarDocumento(palabrasGeneral, librosGeneral, &documentosTotales);
-			printf("\n doc total = %d\n", documentosTotales);
 			break;
             //-----------------------------------------//
         case 2:
@@ -682,6 +682,7 @@ int main() {
             /*------- Buscar un libro por titulo -------*/
 			;Libro* book;
 			BuscarLibro(book, librosGeneral);
+			;
 			//-----------------------------------------//
 		case 4:
 			/*------- Palabras con mayor frecuencia -------*/
