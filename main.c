@@ -942,6 +942,7 @@ void *buscarPorPalabra(Map *mapaLibros, Map *mapaPalabras, int docs)
 	printf("Ingrese la palabra a buscar: ");
 	scanf("%[0-9a-zA-Z ,-]", stringPalabra);
 	getchar();
+	minsuculas(stringPalabra);
 
 	//Buscar la palabra, crear el array de libros e inicializar libroPalabra como el primer elemento de la lista
 	palabra = (Palabra *) searchMap(mapaPalabras, stringPalabra);
@@ -1099,7 +1100,12 @@ int main() {
 		scanf("%d", &option);
 		getchar(); /* Importante poner getchar luego de cada scanf pues de lo 
         contrario un futuro scanf leera un '\n' y no recibira el input */
-
+		
+		if (option > 9 || option < 1){
+			printf("\n\nLo ingresado no es un numero aceptado.\n");
+			getchar();
+			pressEnter(1); continue;
+		}
 		if (option == 8) {break;} //Sale del while si la opcion escogida en el menu era Salir
 
 		printf("\n\n");
