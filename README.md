@@ -4,24 +4,24 @@ Estudiantes PUCV curso: ICI2240-1  ESTRUCTURA DE DATOS
 
 ## **_Integrantes_**
 
-- ### Ademir Muñoz: 
+- ### Ademir Muñoz (LotaSchwager): 
     Pts premio/castigo: 0.
 
    Subestime el tiempo que tenia al principio no le di importancia y de pronto habian prubeas, controles y una trabajo/disertacion que coicidieron con la tarea 3, le fui dejando restandole prioridad debido a que las otras eran pruebas y cuando todo finalizo quedaban pocos dias para hacer algo y nisiquiera habia pensado en como hacer la tarea, tuve 0 organizacion de mi tiempo y ese fue mi error.
 
 
-- ### Lucas Robles: 
+- ### Lucas Robles(LucasRobles2323): 
     Pts premio/castigo: 0.
 
     Siento que en el momento que supe que trabajariamos con directorios, deberia haber investigado como era posible, fue dificil lograr abrir bien el directorio, ademas de que empece a hacer esta tarea mas tarde de lo que deberia. Ademas subi como 5 commit con otro correo que no sale en colaboradres e hice un commit mal y lo resubi con el mismo mensaje commit
 
 
-- ### Sebastián Aguilera: 
+- ### Sebastián Aguilera(Sato-shinji): 
     Pts premio/castigo: 0.
 
     Creo que tuve problemas planificando la forma en la que realizaria las diferentes funciones del programa lo cual perjudicó mi eficiencia en el trabajo. Debería planificar bien qué es lo que voy a hacer antes de ponerme a escribir código.
 
-- ### Gerard Espinoza: 
+- ### Gerard Espinoza(GeraldEspi): 
     Pts premio/castigo: 0.
 
    Problemas de comunicación con mis compañeros, es decir, utilicé varias funciones que ellos implementaron y tuve que preguntar mucho sobre algunas cuestiones 
